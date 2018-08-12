@@ -1,0 +1,11 @@
+branches:
+  - only:
+    - master
+
+language: cpp
+
+install:
+  - cmake --version
+
+script:
+  - true
