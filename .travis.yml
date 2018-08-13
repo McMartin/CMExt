@@ -8,4 +8,4 @@ install:
   - cmake --version
 
 script:
-  - true
+  - cmake -DCMAKE_MODULE_PATH=Modules -P test/CMExt/test_exec.cmake
