@@ -10,3 +10,5 @@ install:
 script:
   - cmake -DCMAKE_MODULE_PATH=Modules -P test/CMExt/test_assert.cmake
   - cmake -DCMAKE_MODULE_PATH=Modules -P test/CMExt/test_exec.cmake
+
+  - cmake -DCMAKE_MODULE_PATH=Modules -P test/cmake/test_set.cmake
