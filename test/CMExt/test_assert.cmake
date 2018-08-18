@@ -12,31 +12,30 @@
 # KIND, either express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-function(cme_assert condition)
+# Enable policy CMP0012:
+#  if() recognizes numbers and boolean constants.
+cmake_policy(SET CMP0012 NEW)
 
-  set(result FALSE)
-  cme_exec(
-    "if(${condition})\n"
-    "  set(result TRUE)\n"
-    "endif()\n"
-  )
-  if(NOT result)
-    message(FATAL_ERROR "Assertion error: cme_assert(${condition})")
-  endif()
+
+include(CMExt)
+
+
+function(test_assert_constants)
+
+  cme_assert([[1 AND ON AND YES AND TRUE AND Y]])
+  cme_assert([[NOT (0 OR OFF OR NO OR FALSE OR N OR IGNORE OR NOTFOUND OR "")]])
 
 endfunction()
 
 
-set(_cme_exec_tmp_file "${CMAKE_CURRENT_LIST_FILE}.exec.tmp")
+function(test_assert_current_file_exists)
 
-macro(cme_exec)
+  cme_assert([[EXISTS "${CMAKE_CURRENT_LIST_FILE}"]])
 
-  file(WRITE "${_cme_exec_tmp_file}"
-    "macro(_cme_exec_inner_macro)\n"
-    ${ARGN}
-    "\nendmacro()"
-  )
-  include("${_cme_exec_tmp_file}")
-  _cme_exec_inner_macro()
+endfunction()
 
-endmacro()
+
+if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
+  test_assert_constants()
+  test_assert_current_file_exists()
+endif()
