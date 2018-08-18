@@ -30,9 +30,7 @@ function(test_exec_set_variable)
 
   cme_exec("set(foo 42)")
 
-  if(NOT foo EQUAL 42)
-    message(FATAL_ERROR "Expected foo EQUAL 42")
-  endif()
+  cme_assert([[foo EQUAL 42]])
 
 endfunction()
 
@@ -43,9 +41,7 @@ function(test_exec_unset_variable)
 
   cme_exec("unset(foo)")
 
-  if(DEFINED foo)
-    message(FATAL_ERROR "Expected NOT DEFINED foo")
-  endif()
+  cme_assert([[NOT DEFINED foo]])
 
 endfunction()
 
