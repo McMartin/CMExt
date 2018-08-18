@@ -8,4 +8,5 @@ install:
   - cmake --version
 
 script:
+  - cmake -DCMAKE_MODULE_PATH=Modules -P test/CMExt/test_assert.cmake
   - cmake -DCMAKE_MODULE_PATH=Modules -P test/CMExt/test_exec.cmake
