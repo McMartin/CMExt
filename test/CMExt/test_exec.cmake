@@ -13,6 +13,7 @@
 # permissions and limitations under the License.
 
 include(CMExt)
+include(CMExt.Test)
 
 
 function(test_exec_return)
@@ -47,7 +48,5 @@ endfunction()
 
 
 if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
-  test_exec_return()
-  test_exec_set_variable()
-  test_exec_unset_variable()
+  cme_test_main()
 endif()

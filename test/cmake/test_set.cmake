@@ -13,6 +13,7 @@
 # permissions and limitations under the License.
 
 include(CMExt)
+include(CMExt.Test)
 
 
 function(test_set_value_from_undefined)
@@ -72,8 +73,5 @@ endfunction()
 
 
 if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
-  test_set_value_from_undefined()
-  test_set_value_from_an_empty_string()
-  test_set_value_from_two_empty_strings()
-  test_set_value_from_list_with_empty_items()
+  cme_test_main()
 endif()
