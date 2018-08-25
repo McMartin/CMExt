@@ -46,6 +46,20 @@ endfunction()
 
 function(test_set_value_from_two_empty_strings)
 
+  set(foo "")
+  cme_assert([[DEFINED foo AND foo STREQUAL ""]])
+
+  set(bar ${foo} ${foo})
+  cme_assert([[NOT DEFINED bar]])
+
+  set(baz "${foo}" "${foo}")
+  cme_assert([[DEFINED baz AND baz STREQUAL "\;"]])
+
+endfunction()
+
+
+function(test_set_value_from_list_of_two_empty_strings)
+
   set(foo "" "")
   cme_assert([[DEFINED foo AND foo STREQUAL "\;"]])
 
@@ -68,6 +82,20 @@ function(test_set_value_from_list_with_empty_items)
 
   set(baz "${foo}")
   cme_assert([[DEFINED baz AND baz STREQUAL "a\;\;b\;"]])
+
+endfunction()
+
+
+function(test_set_value_from_two_lists)
+
+  set(foo "a" "b")
+  cme_assert([[DEFINED foo AND foo STREQUAL "a\;b"]])
+
+  set(bar ${foo} ${foo})
+  cme_assert([[DEFINED bar AND bar STREQUAL "a\;b\;a\;b"]])
+
+  set(baz "${foo}" "${foo}")
+  cme_assert([[DEFINED baz AND baz STREQUAL "a\;b\;a\;b"]])
 
 endfunction()
 
