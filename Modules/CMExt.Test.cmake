@@ -12,30 +12,24 @@
 # KIND, either express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-# Enable policy CMP0012:
-#  if() recognizes numbers and boolean constants.
-cmake_policy(SET CMP0012 NEW)
-
-
-include(CMExt)
-include(CMExt.Test)
-
-
-function(test_assert_constants)
-
-  cme_assert([[1 AND ON AND YES AND TRUE AND Y]])
-  cme_assert([[NOT (0 OR OFF OR NO OR FALSE OR N OR IGNORE OR NOTFOUND OR "")]])
-
-endfunction()
-
-
-function(test_assert_current_file_exists)
-
-  cme_assert([[EXISTS "${CMAKE_CURRENT_LIST_FILE}"]])
-
-endfunction()
-
-
-if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
-  cme_test_main()
+if(CMAKE_VERSION VERSION_LESS 3.3)
+  message(FATAL_ERROR "CMExt.Test requires at least CMake version 3.3")
 endif()
+
+
+function(cme_test_main)
+
+  cmake_policy(SET CMP0057 NEW) # Support new if() IN_LIST operator.
+
+  get_cmake_property(all_commands COMMANDS)
+  get_cmake_property(all_macros MACROS)
+
+  foreach(command ${all_commands})
+    if(command MATCHES "^test_")
+      if(NOT command IN_LIST all_macros)
+        cme_exec("${command}()")
+      endif()
+    endif()
+  endforeach()
+
+endfunction()
