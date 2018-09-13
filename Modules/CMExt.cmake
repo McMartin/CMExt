@@ -12,6 +12,12 @@
 # KIND, either express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
+if(_CMExt.cmake_included)
+  return()
+endif()
+set(_CMExt.cmake_included TRUE)
+
+
 function(cme_assert condition)
 
   set(result FALSE)
