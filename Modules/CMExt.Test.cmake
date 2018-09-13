@@ -12,6 +12,12 @@
 # KIND, either express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
+if(_CMExt.Test.cmake_included)
+  return()
+endif()
+set(_CMExt.Test.cmake_included TRUE)
+
+
 if(CMAKE_VERSION VERSION_LESS 3.3)
   message(FATAL_ERROR "CMExt.Test requires at least CMake version 3.3")
 endif()
