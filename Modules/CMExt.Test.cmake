@@ -23,6 +23,9 @@ if(CMAKE_VERSION VERSION_LESS 3.3)
 endif()
 
 
+include("${CMAKE_CURRENT_LIST_DIR}/CMExt.cmake")
+
+
 function(cme_test_main)
 
   cmake_policy(SET CMP0057 NEW) # Support new if() IN_LIST operator.
