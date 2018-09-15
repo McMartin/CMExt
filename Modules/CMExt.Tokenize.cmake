@@ -31,8 +31,29 @@ function(cme_tokenize cmake_code out_namespace)
     return()
   endmacro()
 
+  macro(_cme_tokenize_emit_token type)
+    math(EXPR count "${count} + 1")
+
+    set(${out_namespace}_${count}_type "${type}" PARENT_SCOPE)
+    set(${out_namespace}_${count}_text "${text}" PARENT_SCOPE)
+    set(${out_namespace}_${count}_line "${line}" PARENT_SCOPE)
+    set(${out_namespace}_${count}_column "${column}" PARENT_SCOPE)
+
+    math(EXPR line "${line} + 1")
+  endmacro()
+
+  macro(_cme_tokenize_consume_newline)
+    set(text "\n")
+    string(SUBSTRING "${cmake_code}" 1 -1 cmake_code)
+    _cme_tokenize_emit_token(Token_Newline)
+  endmacro()
+
   while(NOT cmake_code STREQUAL "")
-    _cme_tokenize_parse_error()
+    if(cmake_code MATCHES "^\n")
+      _cme_tokenize_consume_newline()
+    else()
+      _cme_tokenize_parse_error()
+    endif()
   endwhile()
 
   set(${out_namespace}_count ${count} PARENT_SCOPE)

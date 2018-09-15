@@ -41,6 +41,7 @@ function(test_tokenize_parse_error)
   endmacro()
 
   define_snippet(1   1  "|This is not CMake code|")
+  define_snippet(2   1  "\n|What?|")
 
   foreach(i RANGE 1 ${snippets_count})
     set(code "${snippet_${i}}")
@@ -53,6 +54,20 @@ function(test_tokenize_parse_error)
     cme_assert("tokens_${i}_parse_error_line EQUAL ${snippet_${i}_line}")
     cme_assert("tokens_${i}_parse_error_column EQUAL ${snippet_${i}_column}")
   endforeach()
+
+endfunction()
+
+
+function(test_tokenize_newlines)
+
+  set(code "\n\n")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 2]])
+  assert_token_equals(tokens_1  1  1  "Token_Newline"  "\n")
+  assert_token_equals(tokens_2  2  1  "Token_Newline"  "\n")
 
 endfunction()
 

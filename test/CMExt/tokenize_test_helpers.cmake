@@ -46,3 +46,13 @@ function(assert_cmake_cannot_parse code)
   cme_assert([[process_error MATCHES "Parse error\\\\."]])
 
 endfunction()
+
+
+function(assert_token_equals token line column type text)
+
+  cme_assert("${token}_line EQUAL line")
+  cme_assert("${token}_column EQUAL column")
+  cme_assert("${token}_type STREQUAL type")
+  cme_assert("${token}_text STREQUAL text")
+
+endfunction()
