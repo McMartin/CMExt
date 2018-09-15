@@ -53,6 +53,13 @@ function(cme_tokenize cmake_code out_namespace)
     _cme_tokenize_emit_token(Token_Newline)
   endmacro()
 
+  macro(_cme_tokenize_consume_spaces)
+    set(text "${CMAKE_MATCH_0}")
+    string(LENGTH "${text}" text_length)
+    string(SUBSTRING "${cmake_code}" ${text_length} -1 cmake_code)
+    _cme_tokenize_emit_token(Token_Spaces)
+  endmacro()
+
   macro(_cme_tokenize_consume_identifier)
     set(text "${CMAKE_MATCH_0}")
     string(LENGTH "${text}" text_length)
@@ -75,6 +82,10 @@ function(cme_tokenize cmake_code out_namespace)
   endmacro()
 
   while(NOT cmake_code STREQUAL "")
+    if(cmake_code MATCHES "^[ ]+")
+      _cme_tokenize_consume_spaces()
+    endif()
+
     if(cmake_code MATCHES "^[A-Za-z_][A-Za-z0-9_]*")
       _cme_tokenize_consume_identifier()
 
