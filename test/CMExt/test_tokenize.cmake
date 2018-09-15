@@ -169,6 +169,20 @@ function(test_tokenize_several_arguments)
 endfunction()
 
 
+function(test_tokenize_line_comment)
+
+  set(code "# This file is part of CMExt.\n")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 2]])
+  assert_token_equals(tokens_1 1  1 "Token_LineComment" "# This file is part of CMExt.")
+  assert_token_equals(tokens_2 1 30 "Token_Newline"     "\n")
+
+endfunction()
+
+
 if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
   cme_test_main()
 endif()
