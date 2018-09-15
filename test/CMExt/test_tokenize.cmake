@@ -183,6 +183,17 @@ function(test_tokenize_line_comment)
 endfunction()
 
 
+function(test_tokenize_cme_tokenize_itself)
+
+  file(READ "${CMAKE_CURRENT_LIST_DIR}/../../Modules/CMExt.Tokenize.cmake" file_content)
+
+  cme_tokenize("${file_content}" tokens)
+
+  cme_assert([[NOT tokens_parse_error]])
+
+endfunction()
+
+
 if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
   cme_test_main()
 endif()
