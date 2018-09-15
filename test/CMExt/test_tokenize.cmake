@@ -25,6 +25,34 @@ function(test_tokenize_empty)
 
   assert_cmake_can_parse("")
   cme_assert([[tokens_count EQUAL 0]])
+  cme_assert([[DEFINED tokens_parse_error AND NOT tokens_parse_error]])
+
+endfunction()
+
+
+function(test_tokenize_parse_error)
+
+  set(snippets_count 0)
+  macro(define_snippet line column code)
+    math(EXPR snippets_count "${snippets_count} + 1")
+    set(snippet_${snippets_count}_line "${line}")
+    set(snippet_${snippets_count}_column "${column}")
+    set(snippet_${snippets_count} "${code}")
+  endmacro()
+
+  define_snippet(1   1  "|This is not CMake code|")
+
+  foreach(i RANGE 1 ${snippets_count})
+    set(code "${snippet_${i}}")
+
+    assert_cmake_cannot_parse("${code}")
+
+    cme_tokenize("${code}" tokens_${i})
+
+    cme_assert("tokens_${i}_parse_error")
+    cme_assert("tokens_${i}_parse_error_line EQUAL ${snippet_${i}_line}")
+    cme_assert("tokens_${i}_parse_error_column EQUAL ${snippet_${i}_column}")
+  endforeach()
 
 endfunction()
 

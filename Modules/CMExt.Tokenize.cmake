@@ -21,7 +21,21 @@ set(_CMExt.Tokenize.cmake_included TRUE)
 function(cme_tokenize cmake_code out_namespace)
 
   set(count 0)
+  set(line 1)
+  set(column 1)
+
+  macro(_cme_tokenize_parse_error)
+    set(${out_namespace}_parse_error TRUE PARENT_SCOPE)
+    set(${out_namespace}_parse_error_line "${line}" PARENT_SCOPE)
+    set(${out_namespace}_parse_error_column "${column}" PARENT_SCOPE)
+    return()
+  endmacro()
+
+  while(NOT cmake_code STREQUAL "")
+    _cme_tokenize_parse_error()
+  endwhile()
 
   set(${out_namespace}_count ${count} PARENT_SCOPE)
+  set(${out_namespace}_parse_error FALSE PARENT_SCOPE)
 
 endfunction()

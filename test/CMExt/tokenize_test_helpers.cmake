@@ -31,3 +31,18 @@ function(assert_cmake_can_parse code)
   cme_assert([[process_error STREQUAL ""]])
 
 endfunction()
+
+
+function(assert_cmake_cannot_parse code)
+
+  file(WRITE "${_tokenize_test_helpers_tmp_file}" "return()\n${code}")
+
+  execute_process(
+    COMMAND "${CMAKE_COMMAND}" "-P" "${_tokenize_test_helpers_tmp_file}"
+    RESULT_VARIABLE process_result
+    ERROR_VARIABLE process_error
+  )
+  cme_assert([[process_result EQUAL 1]])
+  cme_assert([[process_error MATCHES "Parse error\\\\."]])
+
+endfunction()
