@@ -42,6 +42,9 @@ function(test_tokenize_parse_error)
 
   define_snippet(1   1  "|This is not CMake code|")
   define_snippet(2   1  "\n|What?|")
+  define_snippet(1   4  "foo")
+  define_snippet(1   5  "foo(")
+  define_snippet(1   6  "foo()bar()")
 
   foreach(i RANGE 1 ${snippets_count})
     set(code "${snippet_${i}}")
@@ -68,6 +71,22 @@ function(test_tokenize_newlines)
   cme_assert([[tokens_count EQUAL 2]])
   assert_token_equals(tokens_1  1  1  "Token_Newline"  "\n")
   assert_token_equals(tokens_2  2  1  "Token_Newline"  "\n")
+
+endfunction()
+
+
+function(test_tokenize_nullary_command_invocation)
+
+  set(code "endfunction()\n")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 4]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"  "endfunction")
+  assert_token_equals(tokens_2  1  12  "Token_LeftParen"   "(")
+  assert_token_equals(tokens_3  1  13  "Token_RightParen"  ")")
+  assert_token_equals(tokens_4  1  14  "Token_Newline"     "\n")
 
 endfunction()
 
