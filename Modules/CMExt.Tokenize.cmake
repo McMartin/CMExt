@@ -91,9 +91,18 @@ function(cme_tokenize cmake_code out_namespace)
     _cme_tokenize_emit_token(Token_QuotedArgument)
   endmacro()
 
+  macro(_cme_tokenize_consume_unquoted_argument)
+    set(text "${CMAKE_MATCH_0}")
+    string(LENGTH "${text}" text_length)
+    string(SUBSTRING "${cmake_code}" ${text_length} -1 cmake_code)
+    _cme_tokenize_emit_token(Token_UnquotedArgument)
+  endmacro()
+
   macro(_cme_tokenize_consume_arguments)
     if(cmake_code MATCHES "^\"")
       _cme_tokenize_consume_quoted_argument()
+    elseif(cmake_code MATCHES "^[^)]+")
+      _cme_tokenize_consume_unquoted_argument()
     endif()
   endmacro()
 

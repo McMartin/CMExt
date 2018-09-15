@@ -48,6 +48,7 @@ function(test_tokenize_parse_error)
   define_snippet(1   6  "  foo")
   define_snippet(1   5  "foo(\"bar")
   define_snippet(1   1  "\"bar\"")
+  define_snippet(1   8  "foo(bar")
 
   foreach(i RANGE 1 ${snippets_count})
     set(code "${snippet_${i}}")
@@ -125,6 +126,23 @@ function(test_tokenize_quoted_arguments)
   assert_token_equals(tokens_4  1  26  "Token_QuotedArgument"  "\"\${code}\"")
   assert_token_equals(tokens_5  1  35  "Token_RightParen"      ")")
   assert_token_equals(tokens_6  1  36  "Token_Newline"         "\n")
+
+endfunction()
+
+
+function(test_tokenize_unquoted_arguments)
+
+  set(code "include(CMExt)\n")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 5]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"        "include")
+  assert_token_equals(tokens_2  1   8  "Token_LeftParen"         "(")
+  assert_token_equals(tokens_3  1   9  "Token_UnquotedArgument"  "CMExt")
+  assert_token_equals(tokens_4  1  14  "Token_RightParen"        ")")
+  assert_token_equals(tokens_5  1  15  "Token_Newline"           "\n")
 
 endfunction()
 
