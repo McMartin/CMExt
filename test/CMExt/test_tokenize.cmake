@@ -41,18 +41,12 @@ function(test_tokenize_parse_error)
   assert_parse_error(1   5  "foo(\"bar")
   assert_parse_error(1   1  "\"bar\"")
   assert_parse_error(1   8  "foo(bar")
+  assert_parse_error(1   8  "foo(bar()")
+  assert_parse_error(1   8  "foo(bar#)")
+  assert_parse_error(1   8  "foo(bar\")")
+  assert_parse_error(1   8  "foo(bar\\)")
   assert_parse_error(1  12  "foo(bar baz")
   assert_parse_error(1   4  "bar baz")
-
-endfunction()
-
-
-function(test_tokenize_bugs)
-
-  assert_cme_tokenize_should_fail_but_does_not("foo(bar()")
-  assert_cme_tokenize_should_fail_but_does_not("foo(bar#)")
-  assert_cme_tokenize_should_fail_but_does_not("foo(bar\")")
-  assert_cme_tokenize_should_fail_but_does_not("foo(bar\\)")
 
 endfunction()
 
