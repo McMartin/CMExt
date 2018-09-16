@@ -114,7 +114,7 @@ function(test_tokenize_indented_nullary_command_invocation)
 endfunction()
 
 
-function(test_tokenize_quoted_arguments)
+function(test_tokenize_quoted_argument)
 
   set(code "  assert_cmake_can_parse(\"\${code}\")\n")
 
@@ -132,7 +132,7 @@ function(test_tokenize_quoted_arguments)
 endfunction()
 
 
-function(test_tokenize_unquoted_arguments)
+function(test_tokenize_unquoted_argument)
 
   set(code "include(CMExt)\n")
 
