@@ -114,6 +114,22 @@ function(test_tokenize_indented_nullary_command_invocation)
 endfunction()
 
 
+function(test_tokenize_nullary_command_invocation_bug)
+
+  set(code "return(\n\t\n)")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 4]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"        "return")
+  assert_token_equals(tokens_2  1   7  "Token_LeftParen"         "(")
+  assert_token_equals(tokens_3  1   8  "Token_UnquotedArgument"  "\n\t\n")
+  assert_token_equals(tokens_4  1  11  "Token_RightParen"        ")")
+
+endfunction()
+
+
 function(test_tokenize_quoted_argument)
 
   set(code "  assert_cmake_can_parse(\"\${code}\")\n")
