@@ -30,39 +30,44 @@ function(test_tokenize_empty)
 endfunction()
 
 
+function(test_tokenize_limitations)
+
+  assert_cme_tokenize_limitation(1   1  "\tfoo()")
+  assert_cme_tokenize_limitation(1   4  "foo ()")
+  assert_cme_tokenize_limitation(1   4  "foo\t()")
+  assert_cme_tokenize_limitation(1   6  "foo() ")
+  assert_cme_tokenize_limitation(1   6  "foo()\t")
+  assert_cme_tokenize_limitation(1   5  "foo(\\;)")
+  assert_cme_tokenize_limitation(1   5  "foo(\n)")
+  assert_cme_tokenize_limitation(1   5  "foo(\t)")
+  assert_cme_tokenize_limitation(1   5  "foo(#\n)")
+  assert_cme_tokenize_limitation(1   5  "foo(())")
+  assert_cme_tokenize_limitation(1   8  "foo([[)]])")
+  assert_cme_tokenize_limitation(1   5  "foo(#[[)]])")
+  assert_cme_tokenize_limitation(1   1  "FOO()")
+  assert_cme_tokenize_limitation(1   2  "_FOO()")
+  assert_cme_tokenize_limitation(1   4  "foo42()")
+
+endfunction()
+
+
 function(test_tokenize_parse_error)
 
-  set(snippets_count 0)
-  macro(define_snippet line column code)
-    math(EXPR snippets_count "${snippets_count} + 1")
-    set(snippet_${snippets_count}_line "${line}")
-    set(snippet_${snippets_count}_column "${column}")
-    set(snippet_${snippets_count} "${code}")
-  endmacro()
-
-  define_snippet(1   1  "|This is not CMake code|")
-  define_snippet(2   1  "\n|What?|")
-  define_snippet(1   4  "foo")
-  define_snippet(1   5  "foo(")
-  define_snippet(1   6  "foo()bar()")
-  define_snippet(1   6  "  foo")
-  define_snippet(1   5  "foo(\"bar")
-  define_snippet(1   1  "\"bar\"")
-  define_snippet(1   8  "foo(bar")
-  define_snippet(1  12  "foo(bar baz")
-  define_snippet(1   4  "bar baz")
-
-  foreach(i RANGE 1 ${snippets_count})
-    set(code "${snippet_${i}}")
-
-    assert_cmake_cannot_parse("${code}")
-
-    cme_tokenize("${code}" tokens_${i})
-
-    cme_assert("tokens_${i}_parse_error")
-    cme_assert("tokens_${i}_parse_error_line EQUAL ${snippet_${i}_line}")
-    cme_assert("tokens_${i}_parse_error_column EQUAL ${snippet_${i}_column}")
-  endforeach()
+  assert_parse_error(1   1  "|This is not CMake code|")
+  assert_parse_error(2   1  "\n|What?|")
+  assert_parse_error(1   4  "foo")
+  assert_parse_error(1   5  "foo(")
+  assert_parse_error(1   6  "foo()bar()")
+  assert_parse_error(1   6  "  foo")
+  assert_parse_error(1   5  "foo(\"bar")
+  assert_parse_error(1   1  "\"bar\"")
+  assert_parse_error(1   8  "foo(bar")
+  assert_parse_error(1   8  "foo(bar()")
+  assert_parse_error(1   8  "foo(bar#)")
+  assert_parse_error(1   8  "foo(bar\")")
+  assert_parse_error(1   8  "foo(bar\\)")
+  assert_parse_error(1  12  "foo(bar baz")
+  assert_parse_error(1   4  "bar baz")
 
 endfunction()
 
@@ -114,7 +119,7 @@ function(test_tokenize_indented_nullary_command_invocation)
 endfunction()
 
 
-function(test_tokenize_quoted_arguments)
+function(test_tokenize_quoted_argument)
 
   set(code "  assert_cmake_can_parse(\"\${code}\")\n")
 
@@ -132,7 +137,7 @@ function(test_tokenize_quoted_arguments)
 endfunction()
 
 
-function(test_tokenize_unquoted_arguments)
+function(test_tokenize_unquoted_argument)
 
   set(code "include(CMExt)\n")
 
@@ -145,6 +150,24 @@ function(test_tokenize_unquoted_arguments)
   assert_token_equals(tokens_3  1   9  "Token_UnquotedArgument"  "CMExt")
   assert_token_equals(tokens_4  1  14  "Token_RightParen"        ")")
   assert_token_equals(tokens_5  1  15  "Token_Newline"           "\n")
+
+endfunction()
+
+
+function(test_tokenize_PARENT_SCOPE_unquoted_argument)
+
+  set(code "unset(foo PARENT_SCOPE)")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 6]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"        "unset")
+  assert_token_equals(tokens_2  1   6  "Token_LeftParen"         "(")
+  assert_token_equals(tokens_3  1   7  "Token_UnquotedArgument"  "foo")
+  assert_token_equals(tokens_4  1  10  "Token_Spaces"            " ")
+  assert_token_equals(tokens_5  1  11  "Token_UnquotedArgument"  "PARENT_SCOPE")
+  assert_token_equals(tokens_6  1  23  "Token_RightParen"        ")")
 
 endfunction()
 
