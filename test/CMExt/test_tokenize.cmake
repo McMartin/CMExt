@@ -151,6 +151,25 @@ function(test_tokenize_unquoted_argument)
 endfunction()
 
 
+function(test_tokenize_PARENT_SCOPE_unquoted_argument)
+
+  set(code "unset(foo PARENT_SCOPE)")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 7]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"        "unset")
+  assert_token_equals(tokens_2  1   6  "Token_LeftParen"         "(")
+  assert_token_equals(tokens_3  1   7  "Token_UnquotedArgument"  "foo")
+  assert_token_equals(tokens_4  1  10  "Token_Spaces"            " ")
+  assert_token_equals(tokens_5  1  11  "Token_UnquotedArgument"  " ")
+  assert_token_equals(tokens_6  1  12  "Token_UnquotedArgument"  "ARENT_SCOPE")
+  assert_token_equals(tokens_7  1  23  "Token_RightParen"        ")")
+
+endfunction()
+
+
 function(test_tokenize_several_arguments)
 
   set(code "  set(code \"function\")\n")
