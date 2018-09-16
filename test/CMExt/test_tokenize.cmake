@@ -44,6 +44,9 @@ function(test_tokenize_limitations)
   assert_cme_tokenize_limitation(1   5  "foo(())")
   assert_cme_tokenize_limitation(1   8  "foo([[)]])")
   assert_cme_tokenize_limitation(1   5  "foo(#[[)]])")
+  assert_cme_tokenize_limitation(1   1  "FOO()")
+  assert_cme_tokenize_limitation(1   2  "_FOO()")
+  assert_cme_tokenize_limitation(1   4  "foo42()")
 
 endfunction()
 

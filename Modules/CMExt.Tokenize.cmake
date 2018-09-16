@@ -140,7 +140,7 @@ function(cme_tokenize cmake_code out_namespace)
       _cme_tokenize_consume_spaces()
     endif()
 
-    if(cmake_code MATCHES "^[A-Za-z_][A-Za-z0-9_]*")
+    if(cmake_code MATCHES "^[a-z_]+")
       _cme_tokenize_consume_command_invocation()
     endif()
 
