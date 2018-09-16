@@ -112,6 +112,22 @@ function(cme_tokenize cmake_code out_namespace)
     endwhile()
   endmacro()
 
+  macro(_cme_tokenize_consume_command_invocation)
+    _cme_tokenize_consume_identifier()
+
+    if(NOT cmake_code MATCHES "^\\(")
+      _cme_tokenize_parse_error()
+    endif()
+    _cme_tokenize_consume_lparen()
+
+    _cme_tokenize_consume_arguments()
+
+    if(NOT cmake_code MATCHES "^\\)")
+      _cme_tokenize_parse_error()
+    endif()
+    _cme_tokenize_consume_rparen()
+  endmacro()
+
   macro(_cme_tokenize_consume_line_comment)
     set(text "${CMAKE_MATCH_0}")
     string(LENGTH "${text}" text_length)
@@ -125,19 +141,7 @@ function(cme_tokenize cmake_code out_namespace)
     endif()
 
     if(cmake_code MATCHES "^[A-Za-z_][A-Za-z0-9_]*")
-      _cme_tokenize_consume_identifier()
-
-      if(NOT cmake_code MATCHES "^\\(")
-        _cme_tokenize_parse_error()
-      endif()
-      _cme_tokenize_consume_lparen()
-
-      _cme_tokenize_consume_arguments()
-
-      if(NOT cmake_code MATCHES "^\\)")
-        _cme_tokenize_parse_error()
-      endif()
-      _cme_tokenize_consume_rparen()
+      _cme_tokenize_consume_command_invocation()
     endif()
 
     if(cmake_code MATCHES "^#[^\n]*")
