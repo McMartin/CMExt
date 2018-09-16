@@ -38,6 +38,8 @@ function(test_tokenize_limitations)
   assert_cme_tokenize_limitation(1   6  "foo() ")
   assert_cme_tokenize_limitation(1   6  "foo()\t")
   assert_cme_tokenize_limitation(1   5  "foo(\\;)")
+  assert_cme_tokenize_limitation(1   5  "foo(\n)")
+  assert_cme_tokenize_limitation(1   5  "foo(\t)")
   assert_cme_tokenize_limitation(1   5  "foo(#\n)")
   assert_cme_tokenize_limitation(1   5  "foo(())")
   assert_cme_tokenize_limitation(1   8  "foo([[)]])")
@@ -110,22 +112,6 @@ function(test_tokenize_indented_nullary_command_invocation)
   assert_token_equals(tokens_3  1  16  "Token_LeftParen"   "(")
   assert_token_equals(tokens_4  1  17  "Token_RightParen"  ")")
   assert_token_equals(tokens_5  1  18  "Token_Newline"     "\n")
-
-endfunction()
-
-
-function(test_tokenize_nullary_command_invocation_bug)
-
-  set(code "return(\n\t\n)")
-
-  cme_tokenize("${code}" tokens)
-
-  assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 4]])
-  assert_token_equals(tokens_1  1   1  "Token_Identifier"        "return")
-  assert_token_equals(tokens_2  1   7  "Token_LeftParen"         "(")
-  assert_token_equals(tokens_3  1   8  "Token_UnquotedArgument"  "\n\t\n")
-  assert_token_equals(tokens_4  1  11  "Token_RightParen"        ")")
 
 endfunction()
 
