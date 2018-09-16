@@ -32,37 +32,17 @@ endfunction()
 
 function(test_tokenize_parse_error)
 
-  set(snippets_count 0)
-  macro(define_snippet line column code)
-    math(EXPR snippets_count "${snippets_count} + 1")
-    set(snippet_${snippets_count}_line "${line}")
-    set(snippet_${snippets_count}_column "${column}")
-    set(snippet_${snippets_count} "${code}")
-  endmacro()
-
-  define_snippet(1   1  "|This is not CMake code|")
-  define_snippet(2   1  "\n|What?|")
-  define_snippet(1   4  "foo")
-  define_snippet(1   5  "foo(")
-  define_snippet(1   6  "foo()bar()")
-  define_snippet(1   6  "  foo")
-  define_snippet(1   5  "foo(\"bar")
-  define_snippet(1   1  "\"bar\"")
-  define_snippet(1   8  "foo(bar")
-  define_snippet(1  12  "foo(bar baz")
-  define_snippet(1   4  "bar baz")
-
-  foreach(i RANGE 1 ${snippets_count})
-    set(code "${snippet_${i}}")
-
-    assert_cmake_cannot_parse("${code}")
-
-    cme_tokenize("${code}" tokens_${i})
-
-    cme_assert("tokens_${i}_parse_error")
-    cme_assert("tokens_${i}_parse_error_line EQUAL ${snippet_${i}_line}")
-    cme_assert("tokens_${i}_parse_error_column EQUAL ${snippet_${i}_column}")
-  endforeach()
+  assert_parse_error(1   1  "|This is not CMake code|")
+  assert_parse_error(2   1  "\n|What?|")
+  assert_parse_error(1   4  "foo")
+  assert_parse_error(1   5  "foo(")
+  assert_parse_error(1   6  "foo()bar()")
+  assert_parse_error(1   6  "  foo")
+  assert_parse_error(1   5  "foo(\"bar")
+  assert_parse_error(1   1  "\"bar\"")
+  assert_parse_error(1   8  "foo(bar")
+  assert_parse_error(1  12  "foo(bar baz")
+  assert_parse_error(1   4  "bar baz")
 
 endfunction()
 
