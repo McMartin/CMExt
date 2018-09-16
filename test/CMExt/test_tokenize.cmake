@@ -47,6 +47,16 @@ function(test_tokenize_parse_error)
 endfunction()
 
 
+function(test_tokenize_bugs)
+
+  assert_cme_tokenize_should_fail_but_does_not("foo(bar()")
+  assert_cme_tokenize_should_fail_but_does_not("foo(bar#)")
+  assert_cme_tokenize_should_fail_but_does_not("foo(bar\")")
+  assert_cme_tokenize_should_fail_but_does_not("foo(bar\\)")
+
+endfunction()
+
+
 function(test_tokenize_newlines)
 
   set(code "\n\n")

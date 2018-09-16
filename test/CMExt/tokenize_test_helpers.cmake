@@ -69,3 +69,14 @@ function(assert_token_equals token line column type text)
   cme_assert("${token}_text STREQUAL text")
 
 endfunction()
+
+
+function(assert_cme_tokenize_should_fail_but_does_not code)
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_cannot_parse("${code}")
+
+  cme_assert("NOT tokens_parse_error")
+
+endfunction()
