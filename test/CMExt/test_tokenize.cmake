@@ -30,6 +30,22 @@ function(test_tokenize_empty)
 endfunction()
 
 
+function(test_tokenize_limitations)
+
+  assert_cme_tokenize_limitation(1   1  "\tfoo()")
+  assert_cme_tokenize_limitation(1   4  "foo ()")
+  assert_cme_tokenize_limitation(1   4  "foo\t()")
+  assert_cme_tokenize_limitation(1   6  "foo() ")
+  assert_cme_tokenize_limitation(1   6  "foo()\t")
+  assert_cme_tokenize_limitation(1   5  "foo(\\;)")
+  assert_cme_tokenize_limitation(1   5  "foo(#\n)")
+  assert_cme_tokenize_limitation(1   5  "foo(())")
+  assert_cme_tokenize_limitation(1   8  "foo([[)]])")
+  assert_cme_tokenize_limitation(1   5  "foo(#[[)]])")
+
+endfunction()
+
+
 function(test_tokenize_parse_error)
 
   assert_parse_error(1   1  "|This is not CMake code|")
