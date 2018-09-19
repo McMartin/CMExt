@@ -57,21 +57,28 @@ endfunction()
 
 function(test_tokenize_parse_error)
 
+  # Error on expected '\n'
   assert_parse_error(1   1  "|This is not CMake code|")
   assert_parse_error(2   1  "\n|What?|")
-  assert_parse_error(1   4  "foo")
-  assert_parse_error(1   5  "foo(")
   assert_parse_error(1   6  "foo()bar()")
-  assert_parse_error(1   6  "  foo")
-  assert_parse_error(1   5  "foo(\"bar")
   assert_parse_error(1   1  "\"bar\"")
+
+  # Error on expected '('
+  assert_parse_error(1   4  "foo")
+  assert_parse_error(1   6  "  foo")
+  assert_parse_error(1   4  "bar baz")
+
+  # Error on expected ')'
+  assert_parse_error(1   5  "foo(")
   assert_parse_error(1   8  "foo(bar")
   assert_parse_error(1   8  "foo(bar()")
   assert_parse_error(1   8  "foo(bar#)")
-  assert_parse_error(1   8  "foo(bar\")")
   assert_parse_error(1   8  "foo(bar\\)")
   assert_parse_error(1  12  "foo(bar baz")
-  assert_parse_error(1   4  "bar baz")
+
+  # Error on expected '"'
+  assert_parse_error(1   5  "foo(\"bar")
+  assert_parse_error(1   8  "foo(bar\")")
 
 endfunction()
 
