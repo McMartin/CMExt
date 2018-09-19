@@ -66,7 +66,6 @@ function(test_tokenize_parse_error)
   # Error on expected '('
   assert_parse_error(1   4  "foo")
   assert_parse_error(1   6  "  foo")
-  assert_parse_error(1   4  "bar baz")
 
   # Error on expected ')'
   assert_parse_error(1   5  "foo(")
@@ -74,7 +73,6 @@ function(test_tokenize_parse_error)
   assert_parse_error(1   8  "foo(bar()")
   assert_parse_error(1   8  "foo(bar#)")
   assert_parse_error(1   8  "foo(bar\\)")
-  assert_parse_error(1  12  "foo(bar baz")
 
   # Error on expected '"'
   assert_parse_error(1   5  "foo(\"bar")
