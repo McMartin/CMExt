@@ -163,6 +163,10 @@ function(cme_tokenize cmake_code out_namespace)
       _cme_tokenize_consume_command_invocation()
     endif()
 
+    if(cmake_code MATCHES "^[ ]+")
+      _cme_tokenize_consume_spaces()
+    endif()
+
     if(cmake_code MATCHES "^#[^\n]*")
       _cme_tokenize_consume_line_comment()
     endif()
