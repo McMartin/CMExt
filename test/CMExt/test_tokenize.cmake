@@ -101,6 +101,22 @@ function(test_tokenize_newlines)
 endfunction()
 
 
+function(test_tokenize_identifiers)
+
+  set(code "foo()\n_bar()\nba_z()\n_()\n")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 16]])
+  assert_token_equals(tokens_1   1  1  "Token_Identifier"  "foo")
+  assert_token_equals(tokens_5   2  1  "Token_Identifier"  "_bar")
+  assert_token_equals(tokens_9   3  1  "Token_Identifier"  "ba_z")
+  assert_token_equals(tokens_13  4  1  "Token_Identifier"  "_")
+
+endfunction()
+
+
 function(test_tokenize_nullary_command_invocation)
 
   set(code "foo()\n")
