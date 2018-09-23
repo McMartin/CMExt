@@ -47,8 +47,6 @@ function(test_tokenize_limitations)
   assert_cme_tokenize_limitation(1   5  "foo(#[[)]])")
   assert_cme_tokenize_limitation(1   5  "foo(#[=[)]=])")
   assert_cme_tokenize_limitation(1   5  "foo(#[==[)]==])")
-  assert_cme_tokenize_limitation(1   1  "FOO()")
-  assert_cme_tokenize_limitation(1   2  "_FOO()")
   assert_cme_tokenize_limitation(1   4  "foo42()")
   assert_cme_tokenize_limitation(2   1  "#[[\n]]")
   assert_cme_tokenize_limitation(2   1  "#[=[\n]=]")
@@ -103,15 +101,15 @@ endfunction()
 
 function(test_tokenize_identifiers)
 
-  set(code "foo()\n_bar()\nba_z()\n_()\n")
+  set(code "Foo()\n_bAr()\nba_Z()\n_()\n")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
   cme_assert([[tokens_count EQUAL 16]])
-  assert_token_equals(tokens_1   1  1  "Token_Identifier"  "foo")
-  assert_token_equals(tokens_5   2  1  "Token_Identifier"  "_bar")
-  assert_token_equals(tokens_9   3  1  "Token_Identifier"  "ba_z")
+  assert_token_equals(tokens_1   1  1  "Token_Identifier"  "Foo")
+  assert_token_equals(tokens_5   2  1  "Token_Identifier"  "_bAr")
+  assert_token_equals(tokens_9   3  1  "Token_Identifier"  "ba_Z")
   assert_token_equals(tokens_13  4  1  "Token_Identifier"  "_")
 
 endfunction()
