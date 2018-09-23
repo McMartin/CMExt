@@ -32,12 +32,8 @@ endfunction()
 
 function(test_tokenize_limitations)
 
-  assert_cme_tokenize_limitation(1   1  "\tfoo()")
-  assert_cme_tokenize_limitation(1   4  "foo\t()")
-  assert_cme_tokenize_limitation(1   6  "foo()\t")
   assert_cme_tokenize_limitation(1   5  "foo(\\;)")
   assert_cme_tokenize_limitation(1   5  "foo(\n)")
-  assert_cme_tokenize_limitation(1   5  "foo(\t)")
   assert_cme_tokenize_limitation(1   5  "foo(#\n)")
   assert_cme_tokenize_limitation(1   5  "foo(())")
   assert_cme_tokenize_limitation(1   9  "foo([=[)]=])")
@@ -58,20 +54,20 @@ function(test_tokenize_parse_error)
   assert_parse_error(1   1  "|foo|")
   assert_parse_error(2   1  "\n|foo|")
   assert_parse_error(1   6  "foo()bar()")
-  assert_parse_error(1   8  "foo()  bar()")
+  assert_parse_error(1   8  "foo()\t bar()")
   assert_parse_error(1   1  "42foo()")
   assert_parse_error(1   1  "\"bar\"")
   assert_parse_error(1   1  "[[bar]]")
 
   # Error on expected '('
   assert_parse_error(1   4  "foo")
-  assert_parse_error(1   6  "foo  ")
-  assert_parse_error(1   6  "  foo")
+  assert_parse_error(1   6  "foo\t ")
+  assert_parse_error(1   6  "\t foo")
 
   # Error on expected ')'
   assert_parse_error(1   5  "foo(")
-  assert_parse_error(1   7  "foo(  ")
-  assert_parse_error(1   7  "foo  (")
+  assert_parse_error(1   7  "foo(\t ")
+  assert_parse_error(1   7  "foo\t (")
   assert_parse_error(1   8  "foo(bar")
   assert_parse_error(1   8  "foo(bar()")
   assert_parse_error(1   8  "foo(bar#)")
@@ -103,17 +99,17 @@ endfunction()
 
 function(test_tokenize_spaces)
 
-  set(code "  foo  (  )  \n  ")
+  set(code " \tfoo\t (\t ) \t\n \t")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
   cme_assert([[tokens_count EQUAL 9]])
-  assert_token_equals(tokens_1  1   1  "Token_Spaces"  "  ")
-  assert_token_equals(tokens_3  1   6  "Token_Spaces"  "  ")
-  assert_token_equals(tokens_5  1   9  "Token_Spaces"  "  ")
-  assert_token_equals(tokens_7  1  12  "Token_Spaces"  "  ")
-  assert_token_equals(tokens_9  2   1  "Token_Spaces"  "  ")
+  assert_token_equals(tokens_1  1   1  "Token_Spaces"  " \t")
+  assert_token_equals(tokens_3  1   6  "Token_Spaces"  "\t ")
+  assert_token_equals(tokens_5  1   9  "Token_Spaces"  "\t ")
+  assert_token_equals(tokens_7  1  12  "Token_Spaces"  " \t")
+  assert_token_equals(tokens_9  2   1  "Token_Spaces"  " \t")
 
 endfunction()
 
