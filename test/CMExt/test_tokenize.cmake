@@ -116,6 +116,18 @@ function(test_tokenize_identifiers)
 endfunction()
 
 
+function(test_tokenize_PARENT_SCOPE_identifier)
+
+  set(code "PARENT_SCOPE()")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_parse_error]])
+
+endfunction()
+
+
 function(test_tokenize_nullary_command_invocation)
 
   set(code "foo()\n")
