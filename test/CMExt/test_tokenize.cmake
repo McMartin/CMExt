@@ -42,7 +42,6 @@ function(test_tokenize_limitations)
   assert_cme_tokenize_limitation(1   5  "foo(\t)")
   assert_cme_tokenize_limitation(1   5  "foo(#\n)")
   assert_cme_tokenize_limitation(1   5  "foo(())")
-  assert_cme_tokenize_limitation(1   8  "foo([[)]])")
   assert_cme_tokenize_limitation(1   9  "foo([=[)]=])")
   assert_cme_tokenize_limitation(1  10  "foo([==[)]==])")
   assert_cme_tokenize_limitation(1   5  "foo(#[[)]])")
@@ -51,6 +50,9 @@ function(test_tokenize_limitations)
   assert_cme_tokenize_limitation(1   1  "FOO()")
   assert_cme_tokenize_limitation(1   2  "_FOO()")
   assert_cme_tokenize_limitation(1   4  "foo42()")
+  assert_cme_tokenize_limitation(2   1  "#[[\n]]")
+  assert_cme_tokenize_limitation(2   1  "#[=[\n]=]")
+  assert_cme_tokenize_limitation(2   1  "#[==[\n]==]")
 
 endfunction()
 
@@ -62,6 +64,7 @@ function(test_tokenize_parse_error)
   assert_parse_error(2   1  "\n|foo|")
   assert_parse_error(1   6  "foo()bar()")
   assert_parse_error(1   1  "\"bar\"")
+  assert_parse_error(1   1  "[[bar]]")
 
   # Error on expected '('
   assert_parse_error(1   4  "foo")
@@ -73,6 +76,9 @@ function(test_tokenize_parse_error)
   assert_parse_error(1   8  "foo(bar()")
   assert_parse_error(1   8  "foo(bar#)")
   assert_parse_error(1   8  "foo(bar\\)")
+
+  # Error on expected ']]'
+  assert_parse_error(1   5  "foo([[bar")
 
   # Error on expected '"'
   assert_parse_error(1   5  "foo(\"bar")
@@ -123,6 +129,22 @@ function(test_tokenize_indented_nullary_command_invocation)
   assert_token_equals(tokens_2  1  3  "Token_Identifier"  "foo")
   assert_token_equals(tokens_3  1  6  "Token_LeftParen"   "(")
   assert_token_equals(tokens_4  1  7  "Token_RightParen"  ")")
+
+endfunction()
+
+
+function(test_tokenize_bracket_argument)
+
+  set(code "foo([[bar]])")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 4]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"       "foo")
+  assert_token_equals(tokens_2  1   4  "Token_LeftParen"        "(")
+  assert_token_equals(tokens_3  1   5  "Token_BracketArgument"  "[[bar]]")
+  assert_token_equals(tokens_4  1  12  "Token_RightParen"       ")")
 
 endfunction()
 
@@ -179,18 +201,20 @@ endfunction()
 
 function(test_tokenize_several_arguments)
 
-  set(code "set(foo \"bar\")")
+  set(code "set(foo \"bar\" [[baz]])")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 6]])
+  cme_assert([[tokens_count EQUAL 8]])
   assert_token_equals(tokens_1  1   1  "Token_Identifier"        "set")
   assert_token_equals(tokens_2  1   4  "Token_LeftParen"         "(")
   assert_token_equals(tokens_3  1   5  "Token_UnquotedArgument"  "foo")
   assert_token_equals(tokens_4  1   8  "Token_Spaces"            " ")
   assert_token_equals(tokens_5  1   9  "Token_QuotedArgument"    "\"bar\"")
-  assert_token_equals(tokens_6  1  14  "Token_RightParen"        ")")
+  assert_token_equals(tokens_6  1  14  "Token_Spaces"            " ")
+  assert_token_equals(tokens_7  1  15  "Token_BracketArgument"   "[[baz]]")
+  assert_token_equals(tokens_8  1  22  "Token_RightParen"        ")")
 
 endfunction()
 
@@ -214,6 +238,17 @@ function(test_tokenize_cme_tokenize_itself)
   file(READ "${CMAKE_CURRENT_LIST_DIR}/../../Modules/CMExt.Tokenize.cmake" file_content)
 
   cme_tokenize("${file_content}" tokens)
+
+  cme_assert([[NOT tokens_parse_error]])
+
+endfunction()
+
+
+function(test_tokenize_this_file)
+
+  file(READ "${CMAKE_CURRENT_LIST_FILE}" this_file_content)
+
+  cme_tokenize("${this_file_content}" tokens)
 
   cme_assert([[NOT tokens_parse_error]])
 
