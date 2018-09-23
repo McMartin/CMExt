@@ -116,7 +116,7 @@ function(cme_tokenize cmake_code out_namespace)
 
   macro(_cme_tokenize_consume_arguments)
     while(1)
-      if(cmake_code MATCHES "^[ ]+")
+      if(cmake_code MATCHES "^[ \t]+")
         _cme_tokenize_consume_spaces()
       elseif(cmake_code MATCHES "^\\[\\[")
         _cme_tokenize_consume_bracket_argument()
@@ -132,6 +132,10 @@ function(cme_tokenize cmake_code out_namespace)
 
   macro(_cme_tokenize_consume_command_invocation)
     _cme_tokenize_consume_identifier()
+
+    if(cmake_code MATCHES "^[ \t]+")
+      _cme_tokenize_consume_spaces()
+    endif()
 
     if(NOT cmake_code MATCHES "^\\(")
       _cme_tokenize_parse_error()
@@ -151,12 +155,16 @@ function(cme_tokenize cmake_code out_namespace)
   set(column 1)
 
   while(NOT cmake_code STREQUAL "")
-    if(cmake_code MATCHES "^[ ]+")
+    if(cmake_code MATCHES "^[ \t]+")
       _cme_tokenize_consume_spaces()
     endif()
 
     if(cmake_code MATCHES "^[A-Za-z_][A-Za-z0-9_]*")
       _cme_tokenize_consume_command_invocation()
+    endif()
+
+    if(cmake_code MATCHES "^[ \t]+")
+      _cme_tokenize_consume_spaces()
     endif()
 
     if(cmake_code MATCHES "^#[^\n]*")
