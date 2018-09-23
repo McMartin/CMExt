@@ -116,6 +116,21 @@ function(test_tokenize_identifiers)
 endfunction()
 
 
+function(test_tokenize_PARENT_SCOPE_identifier)
+
+  set(code "PARENT_SCOPE()")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 3]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"  "PARENT_SCOPE")
+  assert_token_equals(tokens_2  1  13  "Token_LeftParen"   "(")
+  assert_token_equals(tokens_3  1  14  "Token_RightParen"  ")")
+
+endfunction()
+
+
 function(test_tokenize_nullary_command_invocation)
 
   set(code "foo()\n")
