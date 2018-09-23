@@ -244,6 +244,17 @@ function(test_tokenize_cme_tokenize_itself)
 endfunction()
 
 
+function(test_tokenize_this_file)
+
+  file(READ "${CMAKE_CURRENT_LIST_FILE}" this_file_content)
+
+  cme_tokenize("${this_file_content}" tokens)
+
+  cme_assert([[NOT tokens_parse_error]])
+
+endfunction()
+
+
 if(CMAKE_SCRIPT_MODE_FILE STREQUAL CMAKE_CURRENT_LIST_FILE)
   cme_test_main()
 endif()
