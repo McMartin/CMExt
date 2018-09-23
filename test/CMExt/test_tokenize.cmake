@@ -33,7 +33,6 @@ endfunction()
 function(test_tokenize_limitations)
 
   assert_cme_tokenize_limitation(1   1  "\tfoo()")
-  assert_cme_tokenize_limitation(1   4  "foo ()")
   assert_cme_tokenize_limitation(1   4  "foo\t()")
   assert_cme_tokenize_limitation(1   6  "foo() ")
   assert_cme_tokenize_limitation(1   6  "foo()\t")
@@ -66,11 +65,13 @@ function(test_tokenize_parse_error)
 
   # Error on expected '('
   assert_parse_error(1   4  "foo")
+  assert_parse_error(1   6  "foo  ")
   assert_parse_error(1   6  "  foo")
 
   # Error on expected ')'
   assert_parse_error(1   5  "foo(")
   assert_parse_error(1   7  "foo(  ")
+  assert_parse_error(1   7  "foo  (")
   assert_parse_error(1   8  "foo(bar")
   assert_parse_error(1   8  "foo(bar()")
   assert_parse_error(1   8  "foo(bar#)")
@@ -102,15 +103,16 @@ endfunction()
 
 function(test_tokenize_spaces)
 
-  set(code "  foo(  )\n  ")
+  set(code "  foo  (  )\n  ")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 7]])
+  cme_assert([[tokens_count EQUAL 8]])
   assert_token_equals(tokens_1  1  1  "Token_Spaces"  "  ")
-  assert_token_equals(tokens_4  1  7  "Token_Spaces"  "  ")
-  assert_token_equals(tokens_7  2  1  "Token_Spaces"  "  ")
+  assert_token_equals(tokens_3  1  6  "Token_Spaces"  "  ")
+  assert_token_equals(tokens_5  1  9  "Token_Spaces"  "  ")
+  assert_token_equals(tokens_8  2  1  "Token_Spaces"  "  ")
 
 endfunction()
 

@@ -133,6 +133,10 @@ function(cme_tokenize cmake_code out_namespace)
   macro(_cme_tokenize_consume_command_invocation)
     _cme_tokenize_consume_identifier()
 
+    if(cmake_code MATCHES "^[ ]+")
+      _cme_tokenize_consume_spaces()
+    endif()
+
     if(NOT cmake_code MATCHES "^\\(")
       _cme_tokenize_parse_error()
     endif()
