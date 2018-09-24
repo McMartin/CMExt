@@ -72,12 +72,16 @@ function(test_tokenize_parse_error)
   assert_parse_error(1   8  "foo(bar()")
   assert_parse_error(1   8  "foo(bar#)")
   assert_parse_error(1   8  "foo(bar\\)")
+  assert_parse_error(2   3  "foo([[bar\n]]")
+  assert_parse_error(2   2  "foo(\"bar\n\"")
 
   # Error on expected ']]'
   assert_parse_error(1   5  "foo([[bar")
+  assert_parse_error(1   5  "foo([[bar\n")
 
   # Error on expected '"'
   assert_parse_error(1   5  "foo(\"bar")
+  assert_parse_error(1   5  "foo(\"bar\n")
   assert_parse_error(1   8  "foo(bar\")")
 
 endfunction()
@@ -167,32 +171,32 @@ endfunction()
 
 function(test_tokenize_bracket_argument)
 
-  set(code "foo([[bar]])")
+  set(code "foo([[\nbar\n]])")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
   cme_assert([[tokens_count EQUAL 4]])
-  assert_token_equals(tokens_1  1   1  "Token_Identifier"       "foo")
-  assert_token_equals(tokens_2  1   4  "Token_LeftParen"        "(")
-  assert_token_equals(tokens_3  1   5  "Token_BracketArgument"  "[[bar]]")
-  assert_token_equals(tokens_4  1  12  "Token_RightParen"       ")")
+  assert_token_equals(tokens_1  1  1  "Token_Identifier"       "foo")
+  assert_token_equals(tokens_2  1  4  "Token_LeftParen"        "(")
+  assert_token_equals(tokens_3  1  5  "Token_BracketArgument"  "[[\nbar\n]]")
+  assert_token_equals(tokens_4  3  3  "Token_RightParen"       ")")
 
 endfunction()
 
 
 function(test_tokenize_quoted_argument)
 
-  set(code "foo(\"bar\")")
+  set(code "foo(\"bar\n\")")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
   cme_assert([[tokens_count EQUAL 4]])
-  assert_token_equals(tokens_1  1   1  "Token_Identifier"      "foo")
-  assert_token_equals(tokens_2  1   4  "Token_LeftParen"       "(")
-  assert_token_equals(tokens_3  1   5  "Token_QuotedArgument"  "\"bar\"")
-  assert_token_equals(tokens_4  1  10  "Token_RightParen"      ")")
+  assert_token_equals(tokens_1  1  1  "Token_Identifier"      "foo")
+  assert_token_equals(tokens_2  1  4  "Token_LeftParen"       "(")
+  assert_token_equals(tokens_3  1  5  "Token_QuotedArgument"  "\"bar\n\"")
+  assert_token_equals(tokens_4  2  2  "Token_RightParen"      ")")
 
 endfunction()
 
