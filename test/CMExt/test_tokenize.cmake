@@ -33,7 +33,6 @@ endfunction()
 function(test_tokenize_limitations)
 
   assert_cme_tokenize_limitation(1   5  "foo(\\;)")
-  assert_cme_tokenize_limitation(1   5  "foo(\n)")
   assert_cme_tokenize_limitation(1   5  "foo(#\n)")
   assert_cme_tokenize_limitation(1   5  "foo(())")
   assert_cme_tokenize_limitation(1   9  "foo([=[)]=])")
@@ -66,6 +65,7 @@ function(test_tokenize_parse_error)
 
   # Error on expected ')'
   assert_parse_error(1   5  "foo(")
+  assert_parse_error(2   1  "foo(\n")
   assert_parse_error(1   7  "foo(\t ")
   assert_parse_error(1   7  "foo\t (")
   assert_parse_error(1   8  "foo(bar")
@@ -85,14 +85,17 @@ endfunction()
 
 function(test_tokenize_newlines)
 
-  set(code "\n\n")
+  set(code "\n\nfoo(\nbar\nbaz)\n")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 2]])
-  assert_token_equals(tokens_1  1  1  "Token_Newline"  "\n")
-  assert_token_equals(tokens_2  2  1  "Token_Newline"  "\n")
+  cme_assert([[tokens_count EQUAL 10]])
+  assert_token_equals(tokens_1   1  1  "Token_Newline"  "\n")
+  assert_token_equals(tokens_2   2  1  "Token_Newline"  "\n")
+  assert_token_equals(tokens_5   3  5  "Token_Newline"  "\n")
+  assert_token_equals(tokens_7   4  4  "Token_Newline"  "\n")
+  assert_token_equals(tokens_10  5  5  "Token_Newline"  "\n")
 
 endfunction()
 
