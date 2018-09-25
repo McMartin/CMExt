@@ -33,7 +33,6 @@ endfunction()
 function(test_tokenize_limitations)
 
   assert_cme_tokenize_limitation(1   5  "foo(\\;)")
-  assert_cme_tokenize_limitation(1   5  "foo(#\n)")
   assert_cme_tokenize_limitation(1   5  "foo(())")
 
 endfunction()
@@ -57,15 +56,16 @@ function(test_tokenize_parse_error)
 
   # Error on expected ')'
   assert_parse_error(1   5  "foo(")
+  assert_parse_error(1   7  "foo\t (")
   assert_parse_error(2   1  "foo(\n")
   assert_parse_error(1   7  "foo(\t ")
-  assert_parse_error(1   7  "foo\t (")
-  assert_parse_error(1   8  "foo(bar")
   assert_parse_error(1   8  "foo(bar()")
-  assert_parse_error(1   8  "foo(bar#)")
-  assert_parse_error(1   8  "foo(bar\\)")
+  assert_parse_error(1  13  "foo(#[[bar]]")
   assert_parse_error(2   3  "foo([[bar\n]]")
+  assert_parse_error(1  10  "foo(bar#)")
   assert_parse_error(2   2  "foo(\"bar\n\"")
+  assert_parse_error(1   8  "foo(bar")
+  assert_parse_error(1   8  "foo(bar\\)")
 
   # Error on expected ']=*]'
   assert_parse_error(1   5  "foo([==[bar")
@@ -85,35 +85,36 @@ endfunction()
 
 function(test_tokenize_newlines)
 
-  set(code "\n\nfoo(\nbar\nbaz)\n")
+  set(code "\n\nfoo(\nbar\nbaz)\n#\n")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 10]])
+  cme_assert([[tokens_count EQUAL 12]])
   assert_token_equals(tokens_1   1  1  "Token_Newline"  "\n")
   assert_token_equals(tokens_2   2  1  "Token_Newline"  "\n")
   assert_token_equals(tokens_5   3  5  "Token_Newline"  "\n")
   assert_token_equals(tokens_7   4  4  "Token_Newline"  "\n")
   assert_token_equals(tokens_10  5  5  "Token_Newline"  "\n")
+  assert_token_equals(tokens_12  6  2  "Token_Newline"  "\n")
 
 endfunction()
 
 
 function(test_tokenize_spaces)
 
-  set(code " \tfoo\t (\t ) \t#[[]] \t\n \t")
+  set(code " \tfoo\t (\t ) \t#[[]] \t# foo \t\n \t")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 11]])
+  cme_assert([[tokens_count EQUAL 12]])
   assert_token_equals(tokens_1   1   1  "Token_Spaces"  " \t")
   assert_token_equals(tokens_3   1   6  "Token_Spaces"  "\t ")
   assert_token_equals(tokens_5   1   9  "Token_Spaces"  "\t ")
   assert_token_equals(tokens_7   1  12  "Token_Spaces"  " \t")
   assert_token_equals(tokens_9   1  19  "Token_Spaces"  " \t")
-  assert_token_equals(tokens_11  2   1  "Token_Spaces"  " \t")
+  assert_token_equals(tokens_12  2   1  "Token_Spaces"  " \t")
 
 endfunction()
 
@@ -194,6 +195,23 @@ function(test_tokenize_bracket_comment_in_arguments)
   assert_token_equals(tokens_2  1  4  "Token_LeftParen"       "(")
   assert_token_equals(tokens_3  1  5  "Token_BracketComment"  "#[==[\nbar]==]")
   assert_token_equals(tokens_4  2  8  "Token_RightParen"      ")")
+
+endfunction()
+
+
+function(test_tokenize_line_comment_in_arguments)
+
+  set(code "foo(# [==[bar]==] \n)")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 5]])
+  assert_token_equals(tokens_1  1   1  "Token_Identifier"   "foo")
+  assert_token_equals(tokens_2  1   4  "Token_LeftParen"    "(")
+  assert_token_equals(tokens_3  1   5  "Token_LineComment"  "# [==[bar]==] ")
+  assert_token_equals(tokens_4  1  19  "Token_Newline"      "\n")
+  assert_token_equals(tokens_5  2   1  "Token_RightParen"   ")")
 
 endfunction()
 
@@ -298,16 +316,16 @@ function(test_tokenize_interleaved_brackets)
 endfunction()
 
 
-function(test_tokenize_line_comment)
+function(test_tokenize_line_comments)
 
-  set(code "# foo\n")
+  set(code "# foo\nbar(\n) # baz")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 2]])
+  cme_assert([[tokens_count EQUAL 8]])
   assert_token_equals(tokens_1  1  1  "Token_LineComment"  "# foo")
-  assert_token_equals(tokens_2  1  6  "Token_Newline"      "\n")
+  assert_token_equals(tokens_8  3  3  "Token_LineComment"  "# baz")
 
 endfunction()
 
