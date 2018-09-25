@@ -57,15 +57,16 @@ function(test_tokenize_parse_error)
 
   # Error on expected ')'
   assert_parse_error(1   5  "foo(")
+  assert_parse_error(1   7  "foo\t (")
   assert_parse_error(2   1  "foo(\n")
   assert_parse_error(1   7  "foo(\t ")
-  assert_parse_error(1   7  "foo\t (")
-  assert_parse_error(1   8  "foo(bar")
   assert_parse_error(1   8  "foo(bar()")
-  assert_parse_error(1   8  "foo(bar#)")
-  assert_parse_error(1   8  "foo(bar\\)")
+  assert_parse_error(1  13  "foo(#[[bar]]")
   assert_parse_error(2   3  "foo([[bar\n]]")
+  assert_parse_error(1   8  "foo(bar#)")
   assert_parse_error(2   2  "foo(\"bar\n\"")
+  assert_parse_error(1   8  "foo(bar")
+  assert_parse_error(1   8  "foo(bar\\)")
 
   # Error on expected ']=*]'
   assert_parse_error(1   5  "foo([==[bar")
