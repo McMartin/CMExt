@@ -48,19 +48,6 @@ function(assert_cmake_cannot_parse code)
 endfunction()
 
 
-function(assert_cme_tokenize_limitation line column code)
-
-  cme_tokenize("${code}" tokens)
-
-  assert_cmake_can_parse("${code}")
-
-  cme_assert("tokens_parse_error")
-  cme_assert("tokens_parse_error_line EQUAL ${line}")
-  cme_assert("tokens_parse_error_column EQUAL ${column}")
-
-endfunction()
-
-
 function(assert_parse_error line column code)
 
   cme_tokenize("${code}" tokens)
