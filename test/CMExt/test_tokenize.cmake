@@ -33,7 +33,6 @@ endfunction()
 function(test_tokenize_limitations)
 
   assert_cme_tokenize_limitation(1   5  "foo(\\;)")
-  assert_cme_tokenize_limitation(1   5  "foo(())")
 
 endfunction()
 
@@ -59,7 +58,8 @@ function(test_tokenize_parse_error)
   assert_parse_error(1   7  "foo\t (")
   assert_parse_error(2   1  "foo(\n")
   assert_parse_error(1   7  "foo(\t ")
-  assert_parse_error(1   8  "foo(bar()")
+  assert_parse_error(1   6  "foo((")
+  assert_parse_error(1  10  "foo(bar()")
   assert_parse_error(1  13  "foo(#[[bar]]")
   assert_parse_error(2   3  "foo([[bar\n]]")
   assert_parse_error(1  10  "foo(bar#)")
@@ -167,6 +167,26 @@ function(test_tokenize_nullary_command_invocation)
 endfunction()
 
 
+function(test_tokenize_parens)
+
+  set(code "foo(() ( ()))")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 11]])
+  assert_token_equals(tokens_2   1   4  "Token_LeftParen"   "(")
+  assert_token_equals(tokens_3   1   5  "Token_LeftParen"   "(")
+  assert_token_equals(tokens_4   1   6  "Token_RightParen"  ")")
+  assert_token_equals(tokens_6   1   8  "Token_LeftParen"   "(")
+  assert_token_equals(tokens_8   1  10  "Token_LeftParen"   "(")
+  assert_token_equals(tokens_9   1  11  "Token_RightParen"  ")")
+  assert_token_equals(tokens_10  1  12  "Token_RightParen"  ")")
+  assert_token_equals(tokens_11  1  13  "Token_RightParen"  ")")
+
+endfunction()
+
+
 function(test_tokenize_bracket_argument)
 
   set(code "foo([[\nbar\n]])")
@@ -268,20 +288,22 @@ endfunction()
 
 function(test_tokenize_several_arguments)
 
-  set(code "set(foo \"bar\" [=[baz]=])")
+  set(code "set(foo (\"bar\" [=[baz]=]))")
 
   cme_tokenize("${code}" tokens)
 
   assert_cmake_can_parse("${code}")
-  cme_assert([[tokens_count EQUAL 8]])
-  assert_token_equals(tokens_1  1   1  "Token_Identifier"        "set")
-  assert_token_equals(tokens_2  1   4  "Token_LeftParen"         "(")
-  assert_token_equals(tokens_3  1   5  "Token_UnquotedArgument"  "foo")
-  assert_token_equals(tokens_4  1   8  "Token_Spaces"            " ")
-  assert_token_equals(tokens_5  1   9  "Token_QuotedArgument"    "\"bar\"")
-  assert_token_equals(tokens_6  1  14  "Token_Spaces"            " ")
-  assert_token_equals(tokens_7  1  15  "Token_BracketArgument"   "[=[baz]=]")
-  assert_token_equals(tokens_8  1  24  "Token_RightParen"        ")")
+  cme_assert([[tokens_count EQUAL 10]])
+  assert_token_equals(tokens_1   1   1  "Token_Identifier"        "set")
+  assert_token_equals(tokens_2   1   4  "Token_LeftParen"         "(")
+  assert_token_equals(tokens_3   1   5  "Token_UnquotedArgument"  "foo")
+  assert_token_equals(tokens_4   1   8  "Token_Spaces"            " ")
+  assert_token_equals(tokens_5   1   9  "Token_LeftParen"         "(")
+  assert_token_equals(tokens_6   1  10  "Token_QuotedArgument"    "\"bar\"")
+  assert_token_equals(tokens_7   1  15  "Token_Spaces"            " ")
+  assert_token_equals(tokens_8   1  16  "Token_BracketArgument"   "[=[baz]=]")
+  assert_token_equals(tokens_9   1  25  "Token_RightParen"        ")")
+  assert_token_equals(tokens_10  1  26  "Token_RightParen"        ")")
 
 endfunction()
 
