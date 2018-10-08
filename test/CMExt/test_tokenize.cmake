@@ -30,13 +30,6 @@ function(test_tokenize_empty)
 endfunction()
 
 
-function(test_tokenize_limitations)
-
-  assert_cme_tokenize_limitation(1   5  "foo(\\;)")
-
-endfunction()
-
-
 function(test_tokenize_parse_error)
 
   # Error on expected '\n'
@@ -65,7 +58,7 @@ function(test_tokenize_parse_error)
   assert_parse_error(1  10  "foo(bar#)")
   assert_parse_error(2   2  "foo(\"bar\n\"")
   assert_parse_error(1   8  "foo(bar")
-  assert_parse_error(1   8  "foo(bar\\)")
+  assert_parse_error(1  10  "foo(bar\\)")
 
   # Error on expected ']=*]'
   assert_parse_error(1   5  "foo([==[bar")
@@ -282,6 +275,21 @@ function(test_tokenize_PARENT_SCOPE_unquoted_argument)
   assert_token_equals(tokens_4  1  10  "Token_Spaces"            " ")
   assert_token_equals(tokens_5  1  11  "Token_UnquotedArgument"  "PARENT_SCOPE")
   assert_token_equals(tokens_6  1  23  "Token_RightParen"        ")")
+
+endfunction()
+
+
+function(test_tokenize_escape_sequences)
+
+  set(code "foo(\\A\\a\\0\\ \\t\\r\\n\\;\\$\\{\\}\\@\\\\)")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[tokens_count EQUAL 4]])
+  assert_token_equals(
+    tokens_3  1  5  "Token_UnquotedArgument"  "\\A\\a\\0\\ \\t\\r\\n\\;\\$\\{\\}\\@\\\\"
+  )
 
 endfunction()
 
