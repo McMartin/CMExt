@@ -21,6 +21,7 @@ set(_CMExt.Tokenize.cmake_included TRUE)
 function(cme_tokenize cmake_code out_namespace)
 
   macro(_cme_tokenize_parse_error)
+    set(${out_namespace}_count ${count} PARENT_SCOPE)
     set(${out_namespace}_parse_error TRUE PARENT_SCOPE)
     set(${out_namespace}_parse_error_line "${line}" PARENT_SCOPE)
     set(${out_namespace}_parse_error_column "${column}" PARENT_SCOPE)
@@ -220,5 +221,27 @@ function(cme_tokenize cmake_code out_namespace)
 
   set(${out_namespace}_count ${count} PARENT_SCOPE)
   set(${out_namespace}_parse_error FALSE PARENT_SCOPE)
+
+endfunction()
+
+
+function(cme_print_token token)
+
+  set(line "${${token}_line}")
+
+  set(column "${${token}_column}")
+  if(column LESS 10)
+    set(column "0${column}")
+  endif()
+
+  string(REGEX REPLACE "\n" "\\\\n" text "${${token}_text}")
+
+  set(padded_type "${${token}_type}")
+  string(LENGTH "${padded_type}" type_length)
+  foreach(i RANGE ${type_length} 23)
+    string(APPEND padded_type " ")
+  endforeach()
+
+  message(STATUS "${line},${column}:  ${padded_type}'${text}'")
 
 endfunction()
