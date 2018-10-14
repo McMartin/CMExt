@@ -44,9 +44,21 @@ function(cme_tokenize cmake_code out_namespace)
 
   macro(_cme_tokenize_parse_error)
     set(${out_namespace}_count ${count} PARENT_SCOPE)
+    set(${out_namespace}_syntax_error FALSE PARENT_SCOPE)
+
     set(${out_namespace}_parse_error TRUE PARENT_SCOPE)
     set(${out_namespace}_parse_error_line "${line}" PARENT_SCOPE)
     set(${out_namespace}_parse_error_column "${column}" PARENT_SCOPE)
+    return()
+  endmacro()
+
+  macro(_cme_tokenize_syntax_error)
+    set(${out_namespace}_count ${count} PARENT_SCOPE)
+    set(${out_namespace}_parse_error FALSE PARENT_SCOPE)
+
+    set(${out_namespace}_syntax_error TRUE PARENT_SCOPE)
+    set(${out_namespace}_syntax_error_line "${line}" PARENT_SCOPE)
+    set(${out_namespace}_syntax_error_column "${column}" PARENT_SCOPE)
     return()
   endmacro()
 
@@ -243,5 +255,6 @@ function(cme_tokenize cmake_code out_namespace)
 
   set(${out_namespace}_count ${count} PARENT_SCOPE)
   set(${out_namespace}_parse_error FALSE PARENT_SCOPE)
+  set(${out_namespace}_syntax_error FALSE PARENT_SCOPE)
 
 endfunction()
