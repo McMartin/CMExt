@@ -25,10 +25,9 @@ function(assert_cmake_can_parse code)
   execute_process(
     COMMAND "${CMAKE_COMMAND}" "-P" "${_tokenize_test_helpers_tmp_file}"
     RESULT_VARIABLE process_result
-    ERROR_VARIABLE process_error
+    ERROR_QUIET
   )
   cme_assert([[process_result EQUAL 0]])
-  cme_assert([[process_error STREQUAL ""]])
 
 endfunction()
 
