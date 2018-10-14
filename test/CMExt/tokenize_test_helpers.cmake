@@ -25,15 +25,14 @@ function(assert_cmake_can_parse code)
   execute_process(
     COMMAND "${CMAKE_COMMAND}" "-P" "${_tokenize_test_helpers_tmp_file}"
     RESULT_VARIABLE process_result
-    ERROR_VARIABLE process_error
+    ERROR_QUIET
   )
   cme_assert([[process_result EQUAL 0]])
-  cme_assert([[process_error STREQUAL ""]])
 
 endfunction()
 
 
-function(assert_cmake_cannot_parse code)
+function(assert_cmake_fails code error_message)
 
   file(WRITE "${_tokenize_test_helpers_tmp_file}" "return()\n${code}")
 
@@ -43,7 +42,20 @@ function(assert_cmake_cannot_parse code)
     ERROR_VARIABLE process_error
   )
   cme_assert([[process_result EQUAL 1]])
-  cme_assert([[process_error MATCHES "Parse error\\\\."]])
+  cme_assert([[process_error MATCHES "${error_message}"]])
+
+endfunction()
+
+
+function(assert_no_tokenize_errors count code)
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+
+  cme_assert("NOT tokens_parse_error")
+  cme_assert("NOT tokens_syntax_error")
+  cme_assert("tokens_count EQUAL ${count}")
 
 endfunction()
 
@@ -52,11 +64,26 @@ function(assert_parse_error line column code)
 
   cme_tokenize("${code}" tokens)
 
-  assert_cmake_cannot_parse("${code}")
+  assert_cmake_fails("${code}" "Parse error\\\\.")
 
   cme_assert("tokens_parse_error")
   cme_assert("tokens_parse_error_line EQUAL ${line}")
   cme_assert("tokens_parse_error_column EQUAL ${column}")
+  cme_assert("NOT tokens_syntax_error")
+
+endfunction()
+
+
+function(assert_syntax_error line column code)
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_fails("${code}" "Syntax Error in cmake code")
+
+  cme_assert("tokens_syntax_error")
+  cme_assert("tokens_syntax_error_line EQUAL ${line}")
+  cme_assert("tokens_syntax_error_column EQUAL ${column}")
+  cme_assert("NOT tokens_parse_error")
 
 endfunction()
 
