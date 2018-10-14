@@ -331,6 +331,41 @@ function(test_tokenize_several_arguments)
 endfunction()
 
 
+function(test_tokenize_non_separated_arguments)
+
+  assert_no_tokenize_errors(7  "foo(()())")
+  assert_no_tokenize_errors(6  "foo(()#[[baz]])")
+  assert_syntax_error(1   7    "foo(()[[baz]])")
+  assert_no_tokenize_errors(6  "foo(()\"baz\")")
+  assert_no_tokenize_errors(6  "foo(()baz)")
+
+  assert_no_tokenize_errors(6  "foo(#[[bar]]())")
+  assert_no_tokenize_errors(5  "foo(#[[bar]]#[[baz]])")
+  assert_syntax_error(1  13    "foo(#[[bar]][[baz]])")
+  assert_syntax_error(1  13    "foo(#[[bar]]\"baz\")")
+  assert_syntax_error(1  13    "foo(#[[bar]]baz)")
+
+  assert_no_tokenize_errors(6  "foo([[bar]]())")
+  assert_no_tokenize_errors(5  "foo([[bar]]#[[baz]])")
+  assert_syntax_error(1  12    "foo([[bar]][[baz]])")
+  assert_syntax_error(1  12    "foo([[bar]]\"baz\")")
+  assert_syntax_error(1  12    "foo([[bar]]baz)")
+
+  assert_no_tokenize_errors(6  "foo(\"bar\"())")
+  assert_no_tokenize_errors(5  "foo(\"bar\"#[[baz]])")
+  assert_syntax_error(1  10    "foo(\"bar\"[[baz]])")
+  assert_no_tokenize_errors(5  "foo(\"bar\"\"baz\")")
+  assert_no_tokenize_errors(5  "foo(\"bar\"baz)")
+
+  assert_no_tokenize_errors(6  "foo(bar())")
+  assert_no_tokenize_errors(5  "foo(bar#[[baz]])")
+  assert_no_tokenize_errors(4  "foo(bar[[baz]])")
+  assert_no_tokenize_errors(5  "foo(bar\"baz\")")
+  assert_no_tokenize_errors(4  "foo(barbaz)")
+
+endfunction()
+
+
 function(test_tokenize_standalone_bracket_comments)
 
   set(code "#[[foo]]#[=[bar\n]=] #[==[baz]==]")

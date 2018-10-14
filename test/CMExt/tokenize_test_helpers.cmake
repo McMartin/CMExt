@@ -47,6 +47,19 @@ function(assert_cmake_fails code error_message)
 endfunction()
 
 
+function(assert_no_tokenize_errors count code)
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+
+  cme_assert("NOT tokens_parse_error")
+  cme_assert("NOT tokens_syntax_error")
+  cme_assert("tokens_count EQUAL ${count}")
+
+endfunction()
+
+
 function(assert_parse_error line column code)
 
   cme_tokenize("${code}" tokens)
