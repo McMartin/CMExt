@@ -60,6 +60,9 @@ function(test_tokenize_parse_error)
   assert_parse_error(2   2  "foo(\"bar\n\"")
   assert_parse_error(1   8  "foo(bar")
   assert_parse_error(1  10  "foo(bar\\)")
+  assert_parse_error(1   5  "foo(\\\n)")
+  assert_parse_error(1   8  "foo(bar\\\n)")
+  assert_parse_error(1   8  "foo(bar\\\nbaz)")
 
   # Error on expected ']=*]'
   assert_parse_error(1   5  "foo([==[bar")
