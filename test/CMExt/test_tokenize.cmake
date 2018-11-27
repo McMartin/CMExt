@@ -261,8 +261,26 @@ endfunction()
 
 function(test_tokenize_unquoted_argument)
 
+  assert_takes_one_argument(=)
+  assert_tokenize_argument("foo(=)"  3  "Unquoted"  "=")
+
+  assert_takes_one_argument(=[)
+  assert_tokenize_argument("foo(=[)"  3  "Unquoted"  "=[")
+
+  assert_takes_one_argument([=bar)
+  assert_tokenize_argument("foo([=bar)"  3  "Unquoted"  "[=bar")
+
+  assert_takes_one_argument([bar)
+  assert_tokenize_argument("foo([bar)"  3  "Unquoted"  "[bar")
+
   assert_takes_one_argument(bar)
   assert_tokenize_argument("foo(bar)"  3  "Unquoted"  "bar")
+
+  assert_takes_one_argument(bar=)
+  assert_tokenize_argument("foo(bar=)"  3  "Unquoted"  "bar=")
+
+  assert_takes_one_argument(bar[)
+  assert_tokenize_argument("foo(bar[)"  3  "Unquoted"  "bar[")
 
 endfunction()
 
