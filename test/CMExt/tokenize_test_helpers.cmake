@@ -88,11 +88,31 @@ function(assert_syntax_error line column code)
 endfunction()
 
 
+function(assert_takes_one_argument arg1)
+
+  set(remainder "${ARGN}")
+  cme_assert([[remainder STREQUAL ""]])
+
+endfunction()
+
+
 function(assert_token_equals token line column type text)
 
   cme_assert("${token}_line EQUAL line")
   cme_assert("${token}_column EQUAL column")
   cme_assert("${token}_type STREQUAL type")
   cme_assert("${token}_text STREQUAL text")
+
+endfunction()
+
+
+function(assert_tokenize_argument code arg_index arg_type arg_text)
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[NOT tokens_parse_error AND NOT tokens_syntax_error]])
+  cme_assert("tokens_${arg_index}_type STREQUAL Token_${arg_type}Argument")
+  cme_assert("tokens_${arg_index}_text STREQUAL arg_text")
 
 endfunction()

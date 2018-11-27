@@ -261,17 +261,8 @@ endfunction()
 
 function(test_tokenize_unquoted_argument)
 
-  set(code "foo(bar)")
-
-  cme_tokenize("${code}" tokens)
-
-  assert_cmake_can_parse("${code}")
-  cme_assert([[NOT tokens_parse_error AND NOT tokens_syntax_error]])
-  cme_assert([[tokens_count EQUAL 4]])
-  assert_token_equals(tokens_1  1  1  "Token_Identifier"        "foo")
-  assert_token_equals(tokens_2  1  4  "Token_LeftParen"         "(")
-  assert_token_equals(tokens_3  1  5  "Token_UnquotedArgument"  "bar")
-  assert_token_equals(tokens_4  1  8  "Token_RightParen"        ")")
+  assert_takes_one_argument(bar)
+  assert_tokenize_argument("foo(bar)"  3  "Unquoted"  "bar")
 
 endfunction()
 
