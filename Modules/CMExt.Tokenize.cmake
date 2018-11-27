@@ -151,8 +151,8 @@ function(cme_tokenize cmake_code out_namespace)
     endif()
   endmacro()
 
-  set(UNQUOTED "([\\][^\n]|[^\n \t()#\"\\])")
-  set(unquoted_re "(${UNQUOTED})+")
+  set(UNQUOTED "([\\][^\n]|[^\n \t()#\"\\[=])")
+  set(unquoted_re "((${UNQUOTED}|=|\\[=*${UNQUOTED})(${UNQUOTED}|[[=])*|\\[)")
 
   macro(_cme_tokenize_consume_unquoted_argument)
     string(CONCAT text "${CMAKE_MATCH_0}")

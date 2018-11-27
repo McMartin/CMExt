@@ -96,6 +96,14 @@ function(assert_takes_one_argument arg1)
 endfunction()
 
 
+function(assert_takes_two_arguments arg1 arg2)
+
+  set(remainder "${ARGN}")
+  cme_assert([[remainder STREQUAL ""]])
+
+endfunction()
+
+
 function(assert_token_equals token line column type text)
 
   cme_assert("${token}_line EQUAL line")

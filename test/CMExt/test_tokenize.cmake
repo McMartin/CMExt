@@ -285,6 +285,23 @@ function(test_tokenize_unquoted_argument)
 endfunction()
 
 
+function(test_tokenize_open_bracket_and_equal_sign)
+
+  assert_takes_two_arguments([=)
+
+  set(code "foo([=)")
+
+  cme_tokenize("${code}" tokens)
+
+  assert_cmake_can_parse("${code}")
+  cme_assert([[NOT tokens_parse_error AND NOT tokens_syntax_error]])
+  cme_assert([[tokens_count EQUAL 5]])
+  assert_token_equals(tokens_3  1  5  "Token_UnquotedArgument"  "[")
+  assert_token_equals(tokens_4  1  6  "Token_UnquotedArgument"  "=")
+
+endfunction()
+
+
 function(test_tokenize_PARENT_SCOPE_unquoted_argument)
 
   set(code "unset(foo PARENT_SCOPE)")
