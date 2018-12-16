@@ -337,6 +337,38 @@ function(test_tokenize_escape_sequences)
 endfunction()
 
 
+function(test_tokenize_legacy_unquoted_containing_make_style_variable_reference)
+
+  assert_takes_one_argument($(42))
+  assert_tokenize_argument("foo($(42))"  3  "LegacyUnquoted"  "$(42)")
+
+  assert_takes_one_argument($(FOO))
+  assert_tokenize_argument("foo($(FOO))"  3  "LegacyUnquoted"  "$(FOO)")
+
+  assert_takes_one_argument($(_))
+  assert_tokenize_argument("foo($(_))"  3  "LegacyUnquoted"  "$(_)")
+
+  assert_takes_one_argument($(_)==$(_))
+  assert_tokenize_argument("foo($(_)==$(_))"  3  "LegacyUnquoted"  "$(_)==$(_)")
+
+  assert_takes_one_argument($(_)[$(_))
+  assert_tokenize_argument("foo($(_)[$(_))"  3  "LegacyUnquoted"  "$(_)[$(_)")
+
+  assert_takes_one_argument($(bar)$(baz))
+  assert_tokenize_argument("foo($(bar)$(baz))"  3  "LegacyUnquoted"  "$(bar)$(baz)")
+
+  assert_takes_one_argument(-Dbar=$(BAZ))
+  assert_tokenize_argument("foo(-Dbar=$(BAZ))"  3  "LegacyUnquoted"  "-Dbar=$(BAZ)")
+
+  assert_takes_one_argument(=$(_))
+  assert_tokenize_argument("foo(=$(_))"  3  "LegacyUnquoted"  "=$(_)")
+
+  assert_takes_one_argument([$(_))
+  assert_tokenize_argument("foo([$(_))"  3  "LegacyUnquoted"  "[$(_)")
+
+endfunction()
+
+
 function(test_tokenize_several_arguments)
 
   set(code "set(foo (\"bar\" [=[baz]=]))")
