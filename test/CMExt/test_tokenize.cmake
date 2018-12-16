@@ -369,6 +369,20 @@ function(test_tokenize_legacy_unquoted_containing_make_style_variable_reference)
 endfunction()
 
 
+function(test_tokenize_legacy_unquoted_containing_double_quoted_string)
+
+  assert_takes_one_argument(="bar")
+  assert_tokenize_argument("foo(=\"bar\")"  3  "LegacyUnquoted"  "=\"bar\"")
+
+  assert_takes_one_argument(["bar")
+  assert_tokenize_argument("foo([\"bar\")"  3  "LegacyUnquoted"  "[\"bar\"")
+
+  assert_takes_one_argument(-Dbar="BAZ")
+  assert_tokenize_argument("foo(-Dbar=\"BAZ\")"  3  "LegacyUnquoted"  "-Dbar=\"BAZ\"")
+
+endfunction()
+
+
 function(test_tokenize_several_arguments)
 
   set(code "set(foo (\"bar\" [=[baz]=]))")
@@ -421,7 +435,7 @@ function(test_tokenize_non_separated_arguments)
   assert_no_tokenize_errors(6  "foo(bar())")
   assert_no_tokenize_errors(5  "foo(bar#[[baz]])")
   assert_no_tokenize_errors(4  "foo(bar[[baz]])")
-  assert_no_tokenize_errors(5  "foo(bar\"baz\")")
+  assert_no_tokenize_errors(4  "foo(bar\"baz\")")
   assert_no_tokenize_errors(4  "foo(barbaz)")
 
 endfunction()
