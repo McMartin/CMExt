@@ -151,11 +151,11 @@ function(cme_tokenize cmake_code out_namespace)
     endif()
   endmacro()
 
-  set(UNQUOTED "([\\][^\n]|[^\n \t()#\"\\[=])")
-  set(unquoted_re "(${UNQUOTED}|=|\\[=*${UNQUOTED})(${UNQUOTED}|[[=])*")
+  set(UNQUOTED "[\\][^\n]|[^\n \t()#\"\\[=]")
+  set(unquoted_re "(${UNQUOTED}|=|\\[=*(${UNQUOTED}))(${UNQUOTED}|[[=])*")
 
   set(MAKEVAR "[$]\\([A-Za-z0-9_]*\\)")
-  set(LEGACY "(${MAKEVAR}|${UNQUOTED}|\"${UNQUOTED}*\")")
+  set(LEGACY "(${MAKEVAR}|${UNQUOTED}|\"(${UNQUOTED})*\")")
   set(legacy_re "(${MAKEVAR}|${UNQUOTED}|=|\\[=*${LEGACY})(${LEGACY}|[[=])*")
 
   macro(_cme_tokenize_consume_unquoted_argument unquoted_type)
