@@ -6,10 +6,30 @@ task:
   container:
     image: debian:stable-slim
 
+  env:
+    matrix:
+      CMAKE_VERSION: 3.3.2
+      CMAKE_VERSION: 3.4.3
+      CMAKE_VERSION: 3.5.2
+      CMAKE_VERSION: 3.6.3
+      CMAKE_VERSION: 3.7.2
+      CMAKE_VERSION: 3.8.2
+      CMAKE_VERSION: 3.9.6
+      CMAKE_VERSION: 3.10.3
+      CMAKE_VERSION: 3.11.4
+      CMAKE_VERSION: 3.12.4
+      CMAKE_VERSION: 3.13.4
+      CMAKE_VERSION: 3.14.0-rc2
+
   install_script:
     - apt-get update
-    - apt-get install -y cmake
-    - cmake --version
+    - apt-get install -y wget
+    - mkdir cmake-${CMAKE_VERSION}
+    - cd cmake-${CMAKE_VERSION}
+    - wget --no-verbose https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+    - tar --extract --gzip --strip-components=1 --file=cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+    - cd -
+    - ./cmake-${CMAKE_VERSION}/bin/cmake --version
 
   test_script:
-    - cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake
+    - ./cmake-${CMAKE_VERSION}/bin/cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake
