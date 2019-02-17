@@ -1,0 +1,25 @@
+task:
+  name: Cirrus CI
+
+  only_if: $CIRRUS_BASE_BRANCH == "master" || $CIRRUS_BRANCH == "master"
+
+  container:
+    dockerfile: ci/Dockerfile
+
+  env:
+    matrix:
+      CMAKE_VERSION: 3.3.2
+      CMAKE_VERSION: 3.4.3
+      CMAKE_VERSION: 3.5.2
+      CMAKE_VERSION: 3.6.3
+      CMAKE_VERSION: 3.7.2
+      CMAKE_VERSION: 3.8.2
+      CMAKE_VERSION: 3.9.6
+      CMAKE_VERSION: 3.10.3
+      CMAKE_VERSION: 3.11.4
+      CMAKE_VERSION: 3.12.4
+      CMAKE_VERSION: 3.13.4
+      CMAKE_VERSION: 3.14.0-rc2
+
+  test_script:
+    - /opt/cmake-${CMAKE_VERSION}/bin/cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake

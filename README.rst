@@ -3,9 +3,9 @@ CMExt
 
 .. compound::
 
-  |Travis_CI|
+  |Cirrus_CI|
 
 
-.. |Travis_CI| image:: https://travis-ci.com/McMartin/CMExt.svg?branch=master
-  :target: https://travis-ci.com/McMartin/CMExt
-  :alt: Travis CI build status
+.. |Cirrus_CI| image:: https://api.cirrus-ci.com/github/McMartin/CMExt.svg?branch=master
+  :target: https://cirrus-ci.com/github/McMartin/CMExt
+  :alt: Cirrus CI build status
