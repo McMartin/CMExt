@@ -4,7 +4,7 @@ task:
   only_if: $CIRRUS_BASE_BRANCH == "master" || $CIRRUS_BRANCH == "master"
 
   container:
-    image: debian:stable-slim
+    dockerfile: ci/Dockerfile
 
   env:
     matrix:
@@ -21,15 +21,5 @@ task:
       CMAKE_VERSION: 3.13.4
       CMAKE_VERSION: 3.14.0-rc2
 
-  install_script:
-    - apt-get update
-    - apt-get install -y wget
-    - mkdir cmake-${CMAKE_VERSION}
-    - cd cmake-${CMAKE_VERSION}
-    - wget --no-verbose https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
-    - tar --extract --gzip --strip-components=1 --file=cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
-    - cd -
-    - ./cmake-${CMAKE_VERSION}/bin/cmake --version
-
   test_script:
-    - ./cmake-${CMAKE_VERSION}/bin/cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake
+    - /opt/cmake-${CMAKE_VERSION}/bin/cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake
