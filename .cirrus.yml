@@ -1,0 +1,15 @@
+task:
+  name: Cirrus CI
+
+  only_if: $CIRRUS_BASE_BRANCH == "master" || $CIRRUS_BRANCH == "master"
+
+  container:
+    image: debian:stable-slim
+
+  install_script:
+    - apt-get update
+    - apt-get install -y cmake
+    - cmake --version
+
+  test_script:
+    - cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake
