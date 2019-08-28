@@ -387,7 +387,7 @@ function(test_tokenize_legacy_unquoted_containing_double_quoted_string)
   assert_tokenize_argument("foo(-Dbar=\"$(BAZ)\")"  3  "LegacyUnquoted"  "-Dbar=\"$(BAZ)\"")
 
   assert_takes_one_argument([="[ \t=")
-  assert_tokenize_argument("foo([=\"[ \t=\")" 3 "LegacyUnquoted" "[=\"[ \t=\"")
+  assert_tokenize_argument("foo([=\"[ \t=\")"  3  "LegacyUnquoted" "[=\"[ \t=\"")
 
   assert_takes_one_argument(a" "b"c"d)
   assert_tokenize_argument("foo(a\" \"b\"c\"d)"  3  "LegacyUnquoted"  "a\" \"b\"c\"d")
