@@ -35,9 +35,11 @@ function(main)
 
   cme_tokenize("${file_content}" tokens)
 
-  foreach(i RANGE 1 ${tokens_count})
+  set(i 0)
+  while(i LESS tokens_count)
     cme_print_token(tokens_${i})
-  endforeach()
+    math(EXPR i "${i} + 1")
+  endwhile()
 
   if(tokens_parse_error)
     message(FATAL_ERROR

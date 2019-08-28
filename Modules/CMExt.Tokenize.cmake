@@ -63,12 +63,12 @@ function(cme_tokenize cmake_code out_namespace)
   endmacro()
 
   macro(_cme_tokenize_emit_token type)
-    math(EXPR count "${count} + 1")
-
     set(${out_namespace}_${count}_type "${type}" PARENT_SCOPE)
     set(${out_namespace}_${count}_text "${text}" PARENT_SCOPE)
     set(${out_namespace}_${count}_line "${line}" PARENT_SCOPE)
     set(${out_namespace}_${count}_column "${column}" PARENT_SCOPE)
+
+    math(EXPR count "${count} + 1")
   endmacro()
 
   macro(_cme_tokenize_consume_newline)
