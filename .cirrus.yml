@@ -20,6 +20,7 @@ task:
       CMAKE_VERSION: 3.12.4
       CMAKE_VERSION: 3.13.4
       CMAKE_VERSION: 3.14.6
+      CMAKE_VERSION: 3.15.2
 
   test_script:
     - /opt/cmake-${CMAKE_VERSION}/bin/cmake -DCMAKE_MODULE_PATH=Modules -P test/run-all-tests.cmake
