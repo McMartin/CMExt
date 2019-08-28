@@ -79,9 +79,9 @@ RUN mkdir /opt/cmake-3.13.4 \
     && rm cmake-3.13.4-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
 
-RUN mkdir /opt/cmake-3.14.0-rc2 \
-    && cd /opt/cmake-3.14.0-rc2 \
-    && wget --no-verbose https://cmake.org/files/v3.14/cmake-3.14.0-rc2-Linux-x86_64.tar.gz \
-    && tar --extract --gzip --strip-components=1 --file=cmake-3.14.0-rc2-Linux-x86_64.tar.gz \
-    && rm cmake-3.14.0-rc2-Linux-x86_64.tar.gz \
+RUN mkdir /opt/cmake-3.14.6 \
+    && cd /opt/cmake-3.14.6 \
+    && wget --no-verbose https://cmake.org/files/v3.14/cmake-3.14.6-Linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.14.6-Linux-x86_64.tar.gz \
+    && rm cmake-3.14.6-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
