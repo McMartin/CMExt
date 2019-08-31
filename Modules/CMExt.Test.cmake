@@ -33,12 +33,17 @@ function(cme_test_main)
   get_cmake_property(all_commands COMMANDS)
   get_cmake_property(all_macros MACROS)
 
+  set(tests "")
   foreach(command ${all_commands})
     if(command MATCHES "^test_")
       if(NOT command IN_LIST all_macros)
-        cme_exec("${command}()")
+        list(APPEND tests "${command}")
       endif()
     endif()
+  endforeach()
+
+  foreach(test ${tests})
+    cme_exec("${test}()")
   endforeach()
 
 endfunction()
