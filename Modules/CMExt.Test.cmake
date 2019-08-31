@@ -42,8 +42,14 @@ function(cme_test_main)
     endif()
   endforeach()
 
+  list(LENGTH tests tests_count)
+  message(STATUS "Running ${tests_count} tests.")
+
   foreach(test ${tests})
+    message(STATUS "${test}")
     cme_exec("${test}()")
   endforeach()
+
+  message(STATUS "Ran ${tests_count} tests.")
 
 endfunction()
