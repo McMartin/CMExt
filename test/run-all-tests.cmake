@@ -14,12 +14,14 @@
 
 function(main)
 
-  message(STATUS "Running all tests in ${CMAKE_CURRENT_LIST_DIR}")
+  message(STATUS "Running all test files in ${CMAKE_CURRENT_LIST_DIR}")
 
   file(GLOB_RECURSE all_test_files "${CMAKE_CURRENT_LIST_DIR}/test_*.cmake")
   set(failed_test_files 0)
 
   foreach(test_file ${all_test_files})
+    message(STATUS "")
+    message(STATUS "[======] ${test_file}")
     execute_process(
       COMMAND
         "${CMAKE_COMMAND}"
@@ -37,7 +39,8 @@ function(main)
   endforeach()
 
   list(LENGTH all_test_files all_test_files_length)
-  message(STATUS "Ran ${all_test_files_length} test files")
+  message(STATUS "")
+  message(STATUS "Ran ${all_test_files_length} test files in ${CMAKE_CURRENT_LIST_DIR}")
 
   if(NOT failed_test_files EQUAL 0)
     message(FATAL_ERROR "Some test files failed to run")
