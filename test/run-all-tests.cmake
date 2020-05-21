@@ -1,4 +1,4 @@
-# Copyright 2018-2019 Alain Martin
+# Copyright 2018-2020 Alain Martin
 #
 # This file is part of CMExt.
 #
@@ -11,6 +11,9 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 # KIND, either express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
+
+cmake_policy(VERSION ${CMAKE_VERSION})
+
 
 function(main)
 
