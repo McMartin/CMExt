@@ -1,4 +1,4 @@
-# Copyright 2018-2019 Alain Martin
+# Copyright 2018-2020 Alain Martin
 #
 # This file is part of CMExt.
 #
@@ -27,7 +27,7 @@ function(main)
 
   math(EXPR file_pos "${minus_p_option_pos} + 2")
   if(NOT DEFINED CMAKE_ARGV${file_pos})
-    message(FATAL_ERROR "usage: cmake -P cme-tokenize.cmake <file_to_tokenize>")
+    message(FATAL_ERROR "usage: cmake -P cmext-tokenize.cmake <file_to_tokenize>")
   endif()
   set(file_path "${CMAKE_ARGV${file_pos}}")
 
