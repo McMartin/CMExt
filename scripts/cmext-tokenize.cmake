@@ -1,4 +1,4 @@
-# Copyright 2018 Alain Martin
+# Copyright 2018-2020 Alain Martin
 #
 # This file is part of CMExt.
 #
@@ -11,6 +11,9 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 # KIND, either express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
+
+cmake_policy(VERSION ${CMAKE_VERSION})
+
 
 include(CMExt.Tokenize)
 
@@ -27,7 +30,7 @@ function(main)
 
   math(EXPR file_pos "${minus_p_option_pos} + 2")
   if(NOT DEFINED CMAKE_ARGV${file_pos})
-    message(FATAL_ERROR "usage: cmake -P cme-tokenize.cmake <file_to_tokenize>")
+    message(FATAL_ERROR "usage: cmake -P cmext-tokenize.cmake <file_to_tokenize>")
   endif()
   set(file_path "${CMAKE_ARGV${file_pos}}")
 

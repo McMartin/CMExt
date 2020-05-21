@@ -1,4 +1,4 @@
-# Copyright 2018 Alain Martin
+# Copyright 2018-2019 Alain Martin
 #
 # This file is part of CMExt.
 #
