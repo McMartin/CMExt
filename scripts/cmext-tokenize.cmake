@@ -50,6 +50,12 @@ function(main)
     )
   endif()
 
+  if(tokens_syntax_error)
+    message(FATAL_ERROR
+      "Syntax error at ${tokens_syntax_error_line},${tokens_syntax_error_column}."
+    )
+  endif()
+
 endfunction()
 
 
