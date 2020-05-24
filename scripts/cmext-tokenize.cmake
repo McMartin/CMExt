@@ -36,13 +36,7 @@ function(main)
 
   file(READ "${file_path}" file_content)
 
-  cme_tokenize("${file_content}" tokens)
-
-  set(i 0)
-  while(i LESS tokens_count)
-    cme_print_token(tokens_${i})
-    math(EXPR i "${i} + 1")
-  endwhile()
+  cme_tokenize("${file_content}" tokens PRINT_TOKENS)
 
   if(tokens_parse_error)
     message(FATAL_ERROR

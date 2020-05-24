@@ -18,28 +18,6 @@ endif()
 set(_CMExt.Tokenize.cmake_included TRUE)
 
 
-function(cme_print_token token)
-
-  set(line "${${token}_line}")
-
-  set(column "${${token}_column}")
-  if(column LESS 10)
-    set(column "0${column}")
-  endif()
-
-  string(REGEX REPLACE "\n" "\\\\n" text "${${token}_text}")
-
-  set(padded_type "${${token}_type}")
-  string(LENGTH "${padded_type}" type_length)
-  foreach(i RANGE ${type_length} 23)
-    string(APPEND padded_type " ")
-  endforeach()
-
-  message(STATUS "${line},${column}:  ${padded_type}'${text}'")
-
-endfunction()
-
-
 function(cme_tokenize cmake_code out_namespace)
 
   macro(_cme_tokenize_parse_error)
@@ -62,6 +40,30 @@ function(cme_tokenize cmake_code out_namespace)
     return()
   endmacro()
 
+  macro(_cme_tokenize_print_token type)
+    set(print_column "${column}")
+    if(print_column LESS 10)
+      set(print_column "0${print_column}")
+    endif()
+
+    string(REGEX REPLACE "\n" "\\\\n" print_text "${text}")
+
+    set(padded_type "${type}  ")
+    string(LENGTH "${padded_type}" padded_length)
+    if(padded_length LESS 24)
+      foreach(i RANGE ${padded_length} 23)
+        string(APPEND padded_type " ")
+      endforeach()
+    endif()
+
+    message(STATUS "${line},${print_column}:  ${padded_type}'${print_text}'")
+  endmacro()
+
+  set(print_tokens FALSE)
+  if(ARGV2 STREQUAL "PRINT_TOKENS")
+    set(print_tokens TRUE)
+  endif()
+
   macro(_cme_tokenize_emit_token type)
     set(${out_namespace}_${count}_type "${type}" PARENT_SCOPE)
     set(${out_namespace}_${count}_text "${text}" PARENT_SCOPE)
@@ -69,6 +71,10 @@ function(cme_tokenize cmake_code out_namespace)
     set(${out_namespace}_${count}_column "${column}" PARENT_SCOPE)
 
     math(EXPR count "${count} + 1")
+
+    if(print_tokens)
+      _cme_tokenize_print_token("${type}")
+    endif()
   endmacro()
 
   macro(_cme_tokenize_consume_newline)
