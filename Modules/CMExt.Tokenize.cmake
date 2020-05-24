@@ -29,11 +29,13 @@ function(cme_print_token token)
 
   string(REGEX REPLACE "\n" "\\\\n" text "${${token}_text}")
 
-  set(padded_type "${${token}_type}")
-  string(LENGTH "${padded_type}" type_length)
-  foreach(i RANGE ${type_length} 23)
-    string(APPEND padded_type " ")
-  endforeach()
+  set(padded_type "${${token}_type}  ")
+  string(LENGTH "${padded_type}" padded_length)
+  if(padded_length LESS 24)
+    foreach(i RANGE ${padded_length} 23)
+      string(APPEND padded_type " ")
+    endforeach()
+  endif()
 
   message(STATUS "${line},${column}:  ${padded_type}'${text}'")
 
