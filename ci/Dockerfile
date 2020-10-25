@@ -93,16 +93,23 @@ RUN mkdir /opt/cmake-3.15.7 \
     && rm cmake-3.15.7-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
 
-RUN mkdir /opt/cmake-3.16.6 \
-    && cd /opt/cmake-3.16.6 \
-    && wget --no-verbose https://cmake.org/files/v3.16/cmake-3.16.6-Linux-x86_64.tar.gz \
-    && tar --extract --gzip --strip-components=1 --file=cmake-3.16.6-Linux-x86_64.tar.gz \
-    && rm cmake-3.16.6-Linux-x86_64.tar.gz \
+RUN mkdir /opt/cmake-3.16.9 \
+    && cd /opt/cmake-3.16.9 \
+    && wget --no-verbose https://cmake.org/files/v3.16/cmake-3.16.9-Linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.16.9-Linux-x86_64.tar.gz \
+    && rm cmake-3.16.9-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
 
-RUN mkdir /opt/cmake-3.17.2 \
-    && cd /opt/cmake-3.17.2 \
-    && wget --no-verbose https://cmake.org/files/v3.17/cmake-3.17.2-Linux-x86_64.tar.gz \
-    && tar --extract --gzip --strip-components=1 --file=cmake-3.17.2-Linux-x86_64.tar.gz \
-    && rm cmake-3.17.2-Linux-x86_64.tar.gz \
+RUN mkdir /opt/cmake-3.17.5 \
+    && cd /opt/cmake-3.17.5 \
+    && wget --no-verbose https://cmake.org/files/v3.17/cmake-3.17.5-Linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.17.5-Linux-x86_64.tar.gz \
+    && rm cmake-3.17.5-Linux-x86_64.tar.gz \
+    && ./bin/cmake --version
+
+RUN mkdir /opt/cmake-3.18.4 \
+    && cd /opt/cmake-3.18.4 \
+    && wget --no-verbose https://cmake.org/files/v3.18/cmake-3.18.4-Linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.18.4-Linux-x86_64.tar.gz \
+    && rm cmake-3.18.4-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
