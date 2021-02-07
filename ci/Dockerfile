@@ -113,3 +113,10 @@ RUN mkdir /opt/cmake-3.18.5 \
     && tar --extract --gzip --strip-components=1 --file=cmake-3.18.5-Linux-x86_64.tar.gz \
     && rm cmake-3.18.5-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
+
+RUN mkdir /opt/cmake-3.19.4 \
+    && cd /opt/cmake-3.19.4 \
+    && wget --no-verbose https://cmake.org/files/v3.19/cmake-3.19.4-Linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.19.4-Linux-x86_64.tar.gz \
+    && rm cmake-3.19.4-Linux-x86_64.tar.gz \
+    && ./bin/cmake --version
