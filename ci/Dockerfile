@@ -120,3 +120,10 @@ RUN mkdir /opt/cmake-3.19.8 \
     && tar --extract --gzip --strip-components=1 --file=cmake-3.19.8-Linux-x86_64.tar.gz \
     && rm cmake-3.19.8-Linux-x86_64.tar.gz \
     && ./bin/cmake --version
+
+RUN mkdir /opt/cmake-3.20.2 \
+    && cd /opt/cmake-3.20.2 \
+    && wget --no-verbose https://cmake.org/files/v3.20/cmake-3.20.2-linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.20.2-linux-x86_64.tar.gz \
+    && rm cmake-3.20.2-linux-x86_64.tar.gz \
+    && ./bin/cmake --version
