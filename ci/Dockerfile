@@ -135,16 +135,23 @@ RUN mkdir /opt/cmake-3.21.7 \
     && rm cmake-3.21.7-linux-x86_64.tar.gz \
     && ./bin/cmake --version
 
-RUN mkdir /opt/cmake-3.22.5 \
-    && cd /opt/cmake-3.22.5 \
-    && wget --no-verbose https://cmake.org/files/v3.22/cmake-3.22.5-linux-x86_64.tar.gz \
-    && tar --extract --gzip --strip-components=1 --file=cmake-3.22.5-linux-x86_64.tar.gz \
-    && rm cmake-3.22.5-linux-x86_64.tar.gz \
+RUN mkdir /opt/cmake-3.22.6 \
+    && cd /opt/cmake-3.22.6 \
+    && wget --no-verbose https://cmake.org/files/v3.22/cmake-3.22.6-linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.22.6-linux-x86_64.tar.gz \
+    && rm cmake-3.22.6-linux-x86_64.tar.gz \
     && ./bin/cmake --version
 
-RUN mkdir /opt/cmake-3.23.2 \
-    && cd /opt/cmake-3.23.2 \
-    && wget --no-verbose https://cmake.org/files/v3.23/cmake-3.23.2-linux-x86_64.tar.gz \
-    && tar --extract --gzip --strip-components=1 --file=cmake-3.23.2-linux-x86_64.tar.gz \
-    && rm cmake-3.23.2-linux-x86_64.tar.gz \
+RUN mkdir /opt/cmake-3.23.3 \
+    && cd /opt/cmake-3.23.3 \
+    && wget --no-verbose https://cmake.org/files/v3.23/cmake-3.23.3-linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.23.3-linux-x86_64.tar.gz \
+    && rm cmake-3.23.3-linux-x86_64.tar.gz \
+    && ./bin/cmake --version
+
+RUN mkdir /opt/cmake-3.24.1 \
+    && cd /opt/cmake-3.24.1 \
+    && wget --no-verbose https://cmake.org/files/v3.24/cmake-3.24.1-linux-x86_64.tar.gz \
+    && tar --extract --gzip --strip-components=1 --file=cmake-3.24.1-linux-x86_64.tar.gz \
+    && rm cmake-3.24.1-linux-x86_64.tar.gz \
     && ./bin/cmake --version
